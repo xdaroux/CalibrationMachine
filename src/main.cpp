@@ -12,8 +12,6 @@ enum ETAT
   TEST_AXE_2,
   TEST_AXE_3,
   TEST_AXE_4,
-  CALCUL,
-  AFFICHAGE,
   EDIT
 };
 
@@ -123,7 +121,6 @@ void loop()
 
   case ATTENTE:
 
-    //Lecture de RPM
     if (Rpm.rpm < 100)
     {
       if (oldTimerButton(5000))
@@ -181,11 +178,6 @@ void loop()
     Etat = INIT;
 
     break;
-  case CALCUL:
-
-    break;
-  case AFFICHAGE:
-    break;
   }
 }
 
@@ -217,11 +209,6 @@ void blink()
   case TEST_AXE_4:
     //Flag 4
     CalibAxe_4.FlagNewRotation++;
-    break;
-
-  case CALCUL:
-    break;
-  case AFFICHAGE:
     break;
   case EDIT:
     break;
