@@ -297,4 +297,6 @@ public:
     // TODO detection forme bizzard genre harmonique peut le faire avec deriver (trouver deux max local)
 
     // TODO Blink Display quand erreur differente speed !!!
+
+    // TODO calcul de la masse en fonction du RPM et du diametre
 };
