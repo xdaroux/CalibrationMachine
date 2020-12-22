@@ -33,12 +33,12 @@ public:
 
     float AccMax_raw;
     uint16_t AngleAccMax_0_100;
-    uint16_t AngleAccMaxOffset_0_100;
+    int16_t AngleAccMaxOffset_0_100;
     float AngleAccMax_deg;
 
     float AccMin_raw;
     uint16_t AngleAccMin_0_100;
-    uint16_t AngleAccMinOffset_0_100;
+    int16_t AngleAccMinOffset_0_100;
     float AngleAccMin_deg;
 
     TM1637 display;
@@ -76,7 +76,6 @@ public:
             int i = 0;
             int j = 0;
             resetData();
-            afficherTest("Test Avant Juste reset");
             uint32_t timeEntreLecture = ((60.0 / (double)rpm) / (double)NB_LECTURE) * (double)1000000; // (Periode de rotation / NB_LECTURE) 1 000 000 micros seconde
             uint32_t timerOlder = micros();
             FlagNewRotation = 0;
@@ -110,7 +109,6 @@ public:
             }
             Serial.print("TEmps entre Lecture : ");
             Serial.println(timeEntreLecture);
-            afficherTest("Test Avant Moyenne");
             for (i = 0; i < NB_LECTURE; i++)
             {
                 RawAcc[i] = RawAcc[i] / NB_TEST; //Recontruire la moyenne des points
@@ -122,6 +120,8 @@ public:
             afficherPeak();
             allConversion();
             displayValue();
+            Serial.print("Valeur avec offset min :");Serial.println(AngleAccMinOffset_0_100);
+            Serial.print("Valeur avec offset Max :");Serial.println(AngleAccMaxOffset_0_100);
         }
     }
 
