@@ -203,7 +203,7 @@ public:
     void prepareDataAfficher()
     {
         appliquerOffeset();
-        if (AngleAccMax_0_100 < 10 || AngleAccMax_0_100 > 90)
+        if (0)//AngleAccMax_0_100 < 10 || AngleAccMax_0_100 > 90)
         {
             //Prendre le Min
             afficherDiplayPosition = AngleAccMinOffset_0_100;
@@ -214,7 +214,7 @@ public:
             afficherDiplayPosition = AngleAccMaxOffset_0_100;
         }
 
-        afficherDisplayPoid = abs(AccMax_raw - AccMin_raw) / 2;
+        afficherDisplayPoid = map(abs(AccMax_raw - AccMin_raw) / 2,0,20,0,99);
     }
 
     void displayValue()
@@ -271,7 +271,7 @@ public:
         AngleAccMinOffset_0_100 = AngleAccMin_0_100 + offsetMin; // Offset min different
         AngleAccMaxOffset_0_100 = AngleAccMax_0_100 + Offset;
 
-        if (AngleAccMinOffset_0_100 > 100)
+        if (AngleAccMinOffset_0_100 >= 100)
         {
             AngleAccMinOffset_0_100 -= 100;
         }
@@ -280,7 +280,7 @@ public:
             AngleAccMinOffset_0_100 += 100;
         }
 
-        if (AngleAccMaxOffset_0_100 > 100)
+        if (AngleAccMaxOffset_0_100 >= 100)
         {
             AngleAccMaxOffset_0_100 -= 100;
         }

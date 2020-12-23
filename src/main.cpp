@@ -29,7 +29,7 @@ TM1637 RpmDisplay;
 CalibrationAxe CalibAxe_1;
 #define pinACC_1 A0
 #define pinACTIVE_AXE_1 47
-#define ACC_1_ZERO 511
+#define ACC_1_ZERO 480
 #define ACC_1_SPAN 102
 #define pinDISPLAY_1_DIO 28
 #define pinDISPLAY_1_CLK 29
@@ -76,6 +76,7 @@ void setup()
 
   rpm_init(&Rpm);
   RpmDisplay.init(RPM_CLK, RPM_DIO);
+  RpmDisplay.set(LUMINOSITE);
 
   CalibAxe_1.init(pinACC_1, ACC_1_ZERO, ACC_1_SPAN, pinACTIVE_AXE_1, "AXE 1", pinDISPLAY_1_CLK, pinDISPLAY_1_DIO, pinOFFSET);
   CalibAxe_2.init(pinACC_2, ACC_2_ZERO, ACC_2_SPAN, pinACTIVE_AXE_2, "AXE 2", pinDISPLAY_2_CLK, pinDISPLAY_2_DIO, pinOFFSET);
@@ -97,8 +98,9 @@ void loop()
   if (millis() - timerAfficherRPM > 500)
   {
     rpm_calcul(&Rpm);
-    Serial.print("RPM : ");
-    Serial.println(Rpm.rpm);
+    //Serial.print("RPM : ");
+    //Serial.println(Rpm.rpm);
+    //Serial.println(analogRead(A0));
     uptade_display_rpm(RpmDisplay, Rpm.rpm);
     timerAfficherRPM = millis();
   }
