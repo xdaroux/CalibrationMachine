@@ -37,7 +37,7 @@ CalibrationAxe CalibAxe_1;
 CalibrationAxe CalibAxe_2;
 #define pinACC_2 A1
 #define pinACTIVE_AXE_2 49
-#define ACC_2_ZERO 500
+#define ACC_2_ZERO 470
 #define ACC_2_SPAN 102
 #define pinDISPLAY_2_DIO 26
 #define pinDISPLAY_2_CLK 27
@@ -45,7 +45,7 @@ CalibrationAxe CalibAxe_2;
 CalibrationAxe CalibAxe_3;
 #define pinACC_3 A2
 #define pinACTIVE_AXE_3 51
-#define ACC_3_ZERO 507
+#define ACC_3_ZERO 505
 #define ACC_3_SPAN 102
 #define pinDISPLAY_3_DIO 24
 #define pinDISPLAY_3_CLK 25
@@ -53,7 +53,7 @@ CalibrationAxe CalibAxe_3;
 CalibrationAxe CalibAxe_4;
 #define pinACC_4 A3
 #define pinACTIVE_AXE_4 53
-#define ACC_4_ZERO 516
+#define ACC_4_ZERO 481
 #define ACC_4_SPAN 102
 #define pinDISPLAY_4_DIO 22
 #define pinDISPLAY_4_CLK 23
@@ -97,7 +97,7 @@ void setup()
 
 void loop()
 {
-  Serial.println(CalibAxe_4.Acc.read());
+  //Serial.println(CalibAxe_4.Acc.read());
   // put your main code here, to run repeatedly:
   if (millis() - timerAfficherRPM > 500)
   {
