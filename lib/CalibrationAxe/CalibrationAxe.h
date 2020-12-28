@@ -107,7 +107,7 @@ public:
                     FlagNewRotation = 0;
                 }
             }
-            Serial.print("TEmps entre Lecture : ");
+            Serial.print("Temps entre Lecture : ");
             Serial.println(timeEntreLecture);
             for (i = 0; i < NB_LECTURE; i++)
             {
@@ -133,7 +133,7 @@ public:
         for (int i = 0; i < NB_LECTURE; i++)
         {
             Serial.print(i);
-            Serial.print(" : ");
+            Serial.print(";");
             Serial.println(RawAcc[i]);
         }
     }
