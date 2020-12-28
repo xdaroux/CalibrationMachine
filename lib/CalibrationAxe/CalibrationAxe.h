@@ -290,6 +290,22 @@ public:
         }
     }
 
+
+    void calibrationZeroAcc()
+    {
+        Acc.calibrationZero();
+        afficherCalibZero();
+        
+    }
+
+    void afficherCalibZero()
+    {
+        Serial.println("=================Calibration Zero=======================");
+        Serial.println(NomAxe);
+        Serial.print("Zero : ");Serial.println(Acc.Zero);
+        Serial.println("========================================================");
+    }
+
     // TODO Filtrage @ frequence du RPM
 
     // TODO AngleDiff ~ 180

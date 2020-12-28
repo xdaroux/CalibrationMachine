@@ -83,4 +83,10 @@ public:
             }
         }
     }
+
+    void calibrationZero()
+    {
+        Zero = analogRead(pinAcc);
+        
+    }
 };

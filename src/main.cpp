@@ -29,7 +29,7 @@ TM1637 RpmDisplay;
 CalibrationAxe CalibAxe_1;
 #define pinACC_1 A0
 #define pinACTIVE_AXE_1 47
-#define ACC_1_ZERO 480
+#define ACC_1_ZERO 515
 #define ACC_1_SPAN 102
 #define pinDISPLAY_1_DIO 28
 #define pinDISPLAY_1_CLK 29
@@ -37,7 +37,7 @@ CalibrationAxe CalibAxe_1;
 CalibrationAxe CalibAxe_2;
 #define pinACC_2 A1
 #define pinACTIVE_AXE_2 49
-#define ACC_2_ZERO 480
+#define ACC_2_ZERO 500
 #define ACC_2_SPAN 102
 #define pinDISPLAY_2_DIO 26
 #define pinDISPLAY_2_CLK 27
@@ -45,7 +45,7 @@ CalibrationAxe CalibAxe_2;
 CalibrationAxe CalibAxe_3;
 #define pinACC_3 A2
 #define pinACTIVE_AXE_3 51
-#define ACC_3_ZERO 480
+#define ACC_3_ZERO 507
 #define ACC_3_SPAN 102
 #define pinDISPLAY_3_DIO 24
 #define pinDISPLAY_3_CLK 25
@@ -53,7 +53,7 @@ CalibrationAxe CalibAxe_3;
 CalibrationAxe CalibAxe_4;
 #define pinACC_4 A3
 #define pinACTIVE_AXE_4 53
-#define ACC_4_ZERO 480
+#define ACC_4_ZERO 516
 #define ACC_4_SPAN 102
 #define pinDISPLAY_4_DIO 22
 #define pinDISPLAY_4_CLK 23
@@ -67,6 +67,7 @@ void blink();
 bool oldTimerButton(uint16_t timer);
 void clearAllDisplay();
 void editAllOffset();
+void calibAllAxeZero();
 
 void setup()
 {
@@ -83,6 +84,8 @@ void setup()
   CalibAxe_3.init(pinACC_3, ACC_3_ZERO, ACC_3_SPAN, pinACTIVE_AXE_3, "AXE 3", pinDISPLAY_3_CLK, pinDISPLAY_3_DIO, pinOFFSET);
   CalibAxe_4.init(pinACC_4, ACC_4_ZERO, ACC_4_SPAN, pinACTIVE_AXE_4, "AXE 4", pinDISPLAY_4_CLK, pinDISPLAY_4_DIO, pinOFFSET);
 
+  calibAllAxeZero();
+
   attachInterrupt(digitalPinToInterrupt(pinInterrupt), blink, FALLING);
   pinMode(pinSwitch, INPUT_PULLUP);
 
@@ -94,6 +97,7 @@ void setup()
 
 void loop()
 {
+  Serial.println(CalibAxe_4.Acc.read());
   // put your main code here, to run repeatedly:
   if (millis() - timerAfficherRPM > 500)
   {
@@ -103,6 +107,7 @@ void loop()
     //Serial.println(analogRead(A0));
     uptade_display_rpm(RpmDisplay, Rpm.rpm);
     timerAfficherRPM = millis();
+    //
   }
 
   switch (Etat)
@@ -252,4 +257,12 @@ void editAllOffset()
   CalibAxe_2.editOffset();
   CalibAxe_3.editOffset();
   CalibAxe_4.editOffset();
+}
+
+void calibAllAxeZero()
+{
+  CalibAxe_1.calibrationZeroAcc();
+  CalibAxe_2.calibrationZeroAcc();
+  CalibAxe_3.calibrationZeroAcc();
+  CalibAxe_4.calibrationZeroAcc();
 }
