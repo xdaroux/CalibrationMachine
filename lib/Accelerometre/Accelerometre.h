@@ -86,7 +86,12 @@ public:
 
     void calibrationZero()
     {
-        Zero = analogRead(pinAcc);
+        int somme = 0;
+        for (int i = 0; i < 10; i++)
+        {
+            somme += analogRead(pinAcc);
+        }
+        Zero = somme / 10;
         
     }
 };

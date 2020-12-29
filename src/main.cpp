@@ -84,7 +84,7 @@ void setup()
   CalibAxe_3.init(pinACC_3, ACC_3_ZERO, ACC_3_SPAN, pinACTIVE_AXE_3, "AXE 3", pinDISPLAY_3_CLK, pinDISPLAY_3_DIO, pinOFFSET);
   CalibAxe_4.init(pinACC_4, ACC_4_ZERO, ACC_4_SPAN, pinACTIVE_AXE_4, "AXE 4", pinDISPLAY_4_CLK, pinDISPLAY_4_DIO, pinOFFSET);
 
-  calibAllAxeZero();
+  //calibAllAxeZero();
 
   attachInterrupt(digitalPinToInterrupt(pinInterrupt), blink, FALLING);
   pinMode(pinSwitch, INPUT_PULLUP);
