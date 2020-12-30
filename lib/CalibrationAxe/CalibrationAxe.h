@@ -41,6 +41,10 @@ public:
     int16_t AngleAccMinOffset_0_100;
     float AngleAccMin_deg;
 
+    int16_t AngleAccMinInverser;
+    int16_t AngleAccMaxInverser; 
+
+
     TM1637 display;
     uint16_t afficherDiplayPosition;
     uint16_t afficherDisplayPoid;
@@ -107,17 +111,14 @@ public:
                     FlagNewRotation = 0;
                 }
             }
-            Serial.print("Temps entre Lecture : ");
-            Serial.println(timeEntreLecture);
             for (i = 0; i < NB_LECTURE; i++)
             {
                 RawAcc[i] = RawAcc[i] / NB_TEST; //Recontruire la moyenne des points
             }
-            NbLectureTotal = NbLectureTotal / NB_TEST;
             afficherTest("Test Apres Moyenne");
-
             algoPeak();
             afficherPeak();
+            afficherInfoCalibPoids();
             allConversion();
             displayValue();
             Serial.print("Valeur avec offset min :");Serial.println(AngleAccMinOffset_0_100);
@@ -172,6 +173,9 @@ public:
         }
         AccMin_raw = lowestValue;
         AccMax_raw = highestValue;
+
+        AngleAccMinInverser = map(AngleAccMin_0_100,0,100,100,0);
+        AngleAccMaxInverser = map(AngleAccMax_0_100,0,100,100,0);
     }
 
     void afficherPeak()
@@ -185,6 +189,16 @@ public:
         Serial.println(AccMax_raw);
         Serial.print("Angle Max 0 - 99  : ");
         Serial.println(AngleAccMax_0_100);
+    }
+
+    void afficherInfoCalibPoids()
+    {
+        Serial.println(AccMin_raw);
+        Serial.println(AccMax_raw);
+        Serial.println(abs(AccMax_raw-AccMin_raw));
+        Serial.println(Acc.convertRawToGForce(AccMin_raw));
+        Serial.println(Acc.convertRawToGForce(AccMax_raw));
+        Serial.println(Acc.convertRawToGForce(AccMax_raw)-Acc.convertRawToGForce(AccMin_raw));
     }
 
     void allConversion()
@@ -268,8 +282,9 @@ public:
             offsetMin = Offset - 50;
         }
 
-        AngleAccMinOffset_0_100 = AngleAccMin_0_100 + offsetMin; // Offset min different
-        AngleAccMaxOffset_0_100 = AngleAccMax_0_100 + Offset;
+        AngleAccMinOffset_0_100 = AngleAccMinInverser + offsetMin; // Offset min different
+        AngleAccMaxOffset_0_100 = AngleAccMaxInverser + Offset;
+        
 
         if (AngleAccMinOffset_0_100 >= 100)
         {
