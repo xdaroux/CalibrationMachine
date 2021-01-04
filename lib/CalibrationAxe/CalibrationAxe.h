@@ -134,12 +134,14 @@ public:
             }
             
             algoPeak(); //OBG obligatoire
-            allConversion();
+            //allConversion();
+            convertirPoidCalcul(rpm);
             prepareDataAfficher(); //OBG
             displayValue(); //OBG
 
-            convertirPoidCalcul(rpm);
+            
             afficherInfoTest();
+            
         }
     }
 
@@ -233,7 +235,8 @@ public:
 
     bool checkErreur()
     {
-        if(abs(AngleAccMaxOffset_0_100-AngleAccMinOffset_0_100) > 15) // Valeur agle diff acceptable 
+        uint16_t tmp = abs(AngleAccMaxOffset_0_100-AngleAccMinOffset_0_100);
+        if( tmp > 15 && tmp < 75) // Valeur agle diff acceptable 
         {
             erreur = TRUE;
         }
@@ -261,7 +264,14 @@ public:
         }
 
         //Preparation du poids a afficher
-        afficherDisplayPoid = (AccMax_raw - AccMin_raw)*2.5;
+        if(poidCalculer < 0)
+        {
+            afficherDisplayPoid = 0;
+        }
+        else
+        {
+        afficherDisplayPoid = poidCalculer;
+        }
 
         if(afficherDisplayPoid > 99)
         {
@@ -377,7 +387,7 @@ public:
     {
             afficherTest("Test Apres Moyenne");
             afficherPeak();
-            afficherInfoCalibPoids();
+           // afficherInfoCalibPoids();
             Serial.print("Valeur avec offset min :");Serial.println(AngleAccMinOffset_0_100);
             Serial.print("Valeur avec offset Max :");Serial.println(AngleAccMaxOffset_0_100);
             
@@ -385,7 +395,7 @@ public:
 
     void convertirPoidCalcul(uint16_t rpm)
     {
-        poidCalculer = float(Acc.convertRawToGForce(AccMax_raw)-Acc.convertRawToGForce(AccMin_raw)) / (1.1*0.03175*pow(rpm/10,2));
+        poidCalculer = ((10*pow(float(Acc.convertRawToGForce(AccMax_raw)-Acc.convertRawToGForce(AccMin_raw)),2)) / (1.1*0.03175*pow(rpm/10,2)) * 1000 )-4.0;
         Serial.print("POIDS CALCULER : "); Serial.println(poidCalculer);
     }
 
