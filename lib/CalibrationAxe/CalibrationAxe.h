@@ -52,6 +52,8 @@ public:
     int16_t Offset;
     uint8_t pinOffset;
 
+
+
     void init(uint8_t pinAnalog, uint16_t zero, float span, uint8_t pinDigital, String nomAxe, uint8_t pinDigitalDisplayClk, uint8_t pinDigitalDisplayData, uint8_t pinAnalogOffset)
     {
         Acc.init(pinAnalog, zero, span);
@@ -216,8 +218,9 @@ public:
 
     void prepareDataAfficher()
     {
+        //Preparation de l'angle a afficher
         appliquerOffeset();
-        if (0)//AngleAccMax_0_100 < 10 || AngleAccMax_0_100 > 90)
+        if (AngleAccMax_0_100 < 10 || AngleAccMax_0_100 > 90)
         {
             //Prendre le Min
             afficherDiplayPosition = AngleAccMinOffset_0_100;
@@ -228,7 +231,13 @@ public:
             afficherDiplayPosition = AngleAccMaxOffset_0_100;
         }
 
-        afficherDisplayPoid = map(abs(AccMax_raw - AccMin_raw) / 2,0,20,0,99);
+        //Preparation du poids a afficher
+        afficherDisplayPoid = (AccMax_raw - AccMin_raw)*2.5;
+
+        if(afficherDisplayPoid > 99)
+        {
+            afficherDisplayPoid = 99;
+        }
     }
 
     void displayValue()

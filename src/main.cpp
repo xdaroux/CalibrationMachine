@@ -29,7 +29,7 @@ TM1637 RpmDisplay;
 CalibrationAxe CalibAxe_1;
 #define pinACC_1 A0
 #define pinACTIVE_AXE_1 47
-#define ACC_1_ZERO 484 // 515 sans lecture 
+#define ACC_1_ZERO 515//484 // 515 sans lecture 
 #define ACC_1_SPAN 102
 #define pinDISPLAY_1_DIO 28
 #define pinDISPLAY_1_CLK 29
@@ -37,7 +37,7 @@ CalibrationAxe CalibAxe_1;
 CalibrationAxe CalibAxe_2;
 #define pinACC_2 A1
 #define pinACTIVE_AXE_2 49
-#define ACC_2_ZERO 470  //500 sans lecture 
+#define ACC_2_ZERO 500//470  //500 sans lecture 
 #define ACC_2_SPAN 102
 #define pinDISPLAY_2_DIO 26
 #define pinDISPLAY_2_CLK 27
@@ -45,7 +45,7 @@ CalibrationAxe CalibAxe_2;
 CalibrationAxe CalibAxe_3;
 #define pinACC_3 A2
 #define pinACTIVE_AXE_3 51
-#define ACC_3_ZERO 475 // 505 sans lecture 
+#define ACC_3_ZERO 505//475 // 505 sans lecture 
 #define ACC_3_SPAN 102
 #define pinDISPLAY_3_DIO 24
 #define pinDISPLAY_3_CLK 25
