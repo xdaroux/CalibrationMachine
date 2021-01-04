@@ -129,19 +129,17 @@ public:
             {
                 RawAcc[i] = RawAcc[i] / NB_TEST; //Recontruire la moyenne des points
             }
-            afficherTest("Test Apres Moyenne");
-            algoPeak();
-            afficherPeak();
-            afficherInfoCalibPoids();
-            allConversion();
-            prepareDataAfficher();
-            displayValue();
-            Serial.print("Valeur avec offset min :");Serial.println(AngleAccMinOffset_0_100);
-            Serial.print("Valeur avec offset Max :");Serial.println(AngleAccMaxOffset_0_100);
+            
+            algoPeak(); //OBG obligatoire
+            prepareDataAfficher(); //OBG
+            displayValue(); //OBG
+
+
+            afficherInfoTest();
         }
     }
 
-    void afficherTest(String info)
+    void afficherTest(String info) // affiche le data 
     {
         Serial.println(info);
         Serial.print("NOMBRE de TEST MOYENNE : ");
@@ -228,6 +226,7 @@ public:
         AngleAccMin_deg = AngleAccMin_0_100 * (360 / NB_LECTURE);
         AngleAccMax_deg = AngleAccMax_0_100 * (360 / NB_LECTURE);
     }
+
     bool checkErreur()
     {
         if(abs(AngleAccMaxOffset_0_100-AngleAccMinOffset_0_100) > 15) // 
@@ -359,8 +358,7 @@ public:
     void calibrationZeroAcc()
     {
         Acc.calibrationZero();
-        afficherCalibZero();
-        
+        afficherCalibZero(); 
     }
 
     void afficherCalibZero()
@@ -371,13 +369,22 @@ public:
         Serial.println("========================================================");
     }
 
+    void afficherInfoTest()
+    {
+            afficherTest("Test Apres Moyenne");
+            afficherPeak();
+            afficherInfoCalibPoids();
+            Serial.print("Valeur avec offset min :");Serial.println(AngleAccMinOffset_0_100);
+            Serial.print("Valeur avec offset Max :");Serial.println(AngleAccMaxOffset_0_100);
+            //allConversion();
+    }
+
     // TODO Filtrage @ frequence du RPM
 
     // TODO AngleDiff ~ 180
 
     // TODO detection forme bizzard genre harmonique peut le faire avec deriver (trouver deux max local)
 
-    // TODO Blink Display quand erreur differente speed !!!
 
     // TODO calcul de la masse en fonction du RPM et du diametre
 };
