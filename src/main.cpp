@@ -68,6 +68,7 @@ bool oldTimerButton(uint16_t timer);
 void clearAllDisplay();
 void editAllOffset();
 void calibAllAxeZero();
+void checkAllErreur();
 
 void setup()
 {
@@ -107,8 +108,15 @@ void loop()
     //Serial.println(analogRead(A0));
     uptade_display_rpm(RpmDisplay, Rpm.rpm);
     timerAfficherRPM = millis();
+
+
+
+    // check erreur for blink display 
+    checkAllErreur();
     //
   }
+
+  
 
   switch (Etat)
   {
@@ -265,4 +273,27 @@ void calibAllAxeZero()
   CalibAxe_2.calibrationZeroAcc();
   CalibAxe_3.calibrationZeroAcc();
   CalibAxe_4.calibrationZeroAcc();
+}
+
+void checkAllErreur()
+{
+  if(CalibAxe_1.checkErreur())
+  {
+    CalibAxe_1.blinkDisplay();
+  }
+
+  if(CalibAxe_2.checkErreur())
+  {
+    CalibAxe_2.blinkDisplay();
+  }
+
+  if(CalibAxe_3.checkErreur())
+  {
+    CalibAxe_3.blinkDisplay();
+  }
+
+  if(CalibAxe_4.checkErreur())
+  {
+    CalibAxe_4.blinkDisplay();
+  }
 }

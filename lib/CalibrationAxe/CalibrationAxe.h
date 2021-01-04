@@ -48,9 +48,12 @@ public:
     TM1637 display;
     uint16_t afficherDiplayPosition;
     uint16_t afficherDisplayPoid;
+    bool blinkEtat;
 
     int16_t Offset;
     uint8_t pinOffset;
+
+    bool erreur;
 
 
 
@@ -65,6 +68,10 @@ public:
         display.set(LUMINOSITE);
         display.point(POINT_ON);
         pinOffset = pinAnalogOffset;
+        blinkEtat = 0;
+        erreur = 0;
+        AngleAccMinOffset_0_100 = 0;
+        AngleAccMaxOffset_0_100 = 0;
     }
     void resetData()
     {
@@ -76,6 +83,11 @@ public:
 
     void test(uint16_t rpm)
     {
+        // reset 
+        AngleAccMinOffset_0_100 = 0;
+        AngleAccMaxOffset_0_100 = 0;
+        erreur = 0;
+
         if (checkAxeActive())
         {
 
@@ -122,6 +134,7 @@ public:
             afficherPeak();
             afficherInfoCalibPoids();
             allConversion();
+            prepareDataAfficher();
             displayValue();
             Serial.print("Valeur avec offset min :");Serial.println(AngleAccMinOffset_0_100);
             Serial.print("Valeur avec offset Max :");Serial.println(AngleAccMaxOffset_0_100);
@@ -215,6 +228,19 @@ public:
         AngleAccMin_deg = AngleAccMin_0_100 * (360 / NB_LECTURE);
         AngleAccMax_deg = AngleAccMax_0_100 * (360 / NB_LECTURE);
     }
+    bool checkErreur()
+    {
+        if(abs(AngleAccMaxOffset_0_100-AngleAccMinOffset_0_100) > 15) // 
+        {
+            erreur = TRUE;
+        }
+        else
+        {
+            erreur = FALSE;
+        }
+
+        return erreur;   
+    }
 
     void prepareDataAfficher()
     {
@@ -243,7 +269,7 @@ public:
     void displayValue()
     {
         uint8_t buff[2];
-        prepareDataAfficher();
+        
         //Angle
         split_2_digit_number(afficherDiplayPosition, buff);
         display.display(0, buff[0]); // (Where,Value)
@@ -252,6 +278,21 @@ public:
         split_2_digit_number(afficherDisplayPoid, buff);
         display.display(2, buff[0]);
         display.display(3, buff[1]);
+    }
+
+    void blinkDisplay()
+    {
+        if(blinkEtat == 0)
+        {
+            display.clearDisplay();
+            blinkEtat = 1;
+        }
+        else
+        {
+            displayValue();
+            blinkEtat = 0;
+        }
+        
     }
 
     void editOffset()
