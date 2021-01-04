@@ -55,6 +55,8 @@ public:
 
     bool erreur;
 
+    float poidCalculer;
+
 
 
     void init(uint8_t pinAnalog, uint16_t zero, float span, uint8_t pinDigital, String nomAxe, uint8_t pinDigitalDisplayClk, uint8_t pinDigitalDisplayData, uint8_t pinAnalogOffset)
@@ -87,6 +89,7 @@ public:
         AngleAccMinOffset_0_100 = 0;
         AngleAccMaxOffset_0_100 = 0;
         erreur = 0;
+        blinkEtat = 0;
 
         if (checkAxeActive())
         {
@@ -131,10 +134,11 @@ public:
             }
             
             algoPeak(); //OBG obligatoire
+            allConversion();
             prepareDataAfficher(); //OBG
             displayValue(); //OBG
 
-
+            convertirPoidCalcul(rpm);
             afficherInfoTest();
         }
     }
@@ -229,7 +233,7 @@ public:
 
     bool checkErreur()
     {
-        if(abs(AngleAccMaxOffset_0_100-AngleAccMinOffset_0_100) > 15) // 
+        if(abs(AngleAccMaxOffset_0_100-AngleAccMinOffset_0_100) > 15) // Valeur agle diff acceptable 
         {
             erreur = TRUE;
         }
@@ -376,7 +380,13 @@ public:
             afficherInfoCalibPoids();
             Serial.print("Valeur avec offset min :");Serial.println(AngleAccMinOffset_0_100);
             Serial.print("Valeur avec offset Max :");Serial.println(AngleAccMaxOffset_0_100);
-            //allConversion();
+            
+    }
+
+    void convertirPoidCalcul(uint16_t rpm)
+    {
+        poidCalculer = float(Acc.convertRawToGForce(AccMax_raw)-Acc.convertRawToGForce(AccMin_raw)) / (1.1*0.03175*pow(rpm/10,2));
+        Serial.print("POIDS CALCULER : "); Serial.println(poidCalculer);
     }
 
     // TODO Filtrage @ frequence du RPM

@@ -22,6 +22,8 @@ rpm_t Rpm;
 unsigned long timerAfficherRPM = millis();
 uint32_t timerOldButton = millis();
 
+uint32_t timeOlderErreur = millis();
+
 #define RPM_DIO 30
 #define RPM_CLK 31
 TM1637 RpmDisplay;
@@ -112,7 +114,7 @@ void loop()
 
 
     // check erreur for blink display 
-    checkAllErreur();
+    
     //
   }
 
@@ -145,10 +147,18 @@ void loop()
       }
     }
 
+
+
     if (Rpm.rpm > 100 && digitalRead(pinSwitch) == LOW)
     {
       Etat = TEST_AXE_1;
       clearAllDisplay();
+    }
+
+    if(millis() - timeOlderErreur > 500)
+    {
+      checkAllErreur();
+      timeOlderErreur = millis();
     }
     break;
 
