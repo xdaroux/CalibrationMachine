@@ -208,6 +208,11 @@ public:
         Serial.println(AccMax_raw);
         Serial.print("Angle Max 0 - 99  : ");
         Serial.println(AngleAccMax_0_100);
+        Serial.println("==================================");
+        Serial.print("Afficher G force Min : ");Serial.println(Acc.convertRawToGForce(AccMin_raw));
+        Serial.print("Afficher G force Max : ");Serial.println(Acc.convertRawToGForce(AccMax_raw));
+        Serial.print("Afficher G force Diff : ");Serial.println(Acc.convertRawToGForce(AccMax_raw) - Acc.convertRawToGForce(AccMin_raw) );
+        Serial.println("==================================");
     }
 
     void afficherInfoCalibPoids()
@@ -385,7 +390,7 @@ public:
 
     void afficherInfoTest()
     {
-            afficherTest("Test Apres Moyenne");
+            //afficherTest("Test Apres Moyenne");
             afficherPeak();
            // afficherInfoCalibPoids();
             Serial.print("Valeur avec offset min :");Serial.println(AngleAccMinOffset_0_100);
