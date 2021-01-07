@@ -3,6 +3,9 @@
 #include "CalibrationAxe.h"
 #include "RPM_NEW.h"
 #include "displayData.h"
+
+#define _DEBUG_N1_ 0
+
 //Definition des Type//
 enum ETAT
 {
@@ -19,6 +22,7 @@ enum ETAT
 ETAT Etat = INIT;
 
 rpm_t Rpm;
+#define MIN_ACTIF_RPM 100
 unsigned long timerAfficherRPM = millis();
 uint32_t timerOldButton = millis();
 
@@ -64,6 +68,12 @@ CalibrationAxe CalibAxe_4;
 #define pinInterrupt 2
 #define pinOFFSET A15
 
+//Constante General 
+#define TIME_UPTADTE_RPM 500
+#define TIME_BLINK_ERREUR 500
+#define TIME_OLD_BUTTON_ATTENTE 2000
+#define TIME_OLD_BUTTON_EDIT 5000
+
 //Declaration Fonction//
 void blink();
 bool oldTimerButton(uint16_t timer);
@@ -92,33 +102,18 @@ void setup()
   attachInterrupt(digitalPinToInterrupt(pinInterrupt), blink, FALLING);
   pinMode(pinSwitch, INPUT_PULLUP);
 
-  //Do it once
   editAllOffset();
-
   clearAllDisplay();
 }
 
 void loop()
 {
-  //Serial.println(CalibAxe_4.Acc.read());
-  // put your main code here, to run repeatedly:
-  if (millis() - timerAfficherRPM > 500)
+  if (millis() - timerAfficherRPM > TIME_UPTADTE_RPM)
   {
     rpm_calcul(&Rpm);
-    //Serial.print("RPM : ");
-    //Serial.println(Rpm.rpm);
-    //Serial.println(analogRead(A0));
     uptade_display_rpm(RpmDisplay, Rpm.rpm);
     timerAfficherRPM = millis();
-
-
-
-    // check erreur for blink display 
-    
-    //
   }
-
-  
 
   switch (Etat)
   {
@@ -129,7 +124,7 @@ void loop()
 
   case EDIT:
     editAllOffset();
-    if (oldTimerButton(2000))
+    if (oldTimerButton(TIME_OLD_BUTTON_ATTENTE))
     {
       Etat = ATTENTE;
       clearAllDisplay();
@@ -138,9 +133,9 @@ void loop()
 
   case ATTENTE:
 
-    if (Rpm.rpm < 100)
+    if (Rpm.rpm < MIN_ACTIF_RPM)
     {
-      if (oldTimerButton(5000))
+      if (oldTimerButton(TIME_OLD_BUTTON_EDIT))
       {
         Etat = EDIT;
         clearAllDisplay();
@@ -149,13 +144,13 @@ void loop()
 
 
 
-    if (Rpm.rpm > 100 && digitalRead(pinSwitch) == LOW)
+    if (Rpm.rpm > MIN_ACTIF_RPM && digitalRead(pinSwitch) == LOW)
     {
       Etat = TEST_AXE_1;
       clearAllDisplay();
     }
 
-    if(millis() - timeOlderErreur > 500)
+    if(millis() - timeOlderErreur > TIME_BLINK_ERREUR)
     {
       checkAllErreur();
       timeOlderErreur = millis();
@@ -163,45 +158,35 @@ void loop()
     break;
 
   case TEST_AXE_1:
+  #if _DEBUG_N1_
     Serial.println("ETAT : TEST AXE 1");
-    //Flag 1
-
+  #endif
     CalibAxe_1.test(Rpm.rpm);
-    //Affichage
-
     Etat = TEST_AXE_2;
     break;
 
   case TEST_AXE_2:
+  #if _DEBUG_N1_
     Serial.println("ETAT : TEST AXE 2");
-    //Flag 2
-    //Flag 1
-
+  #endif
     CalibAxe_2.test(Rpm.rpm);
-    //Affichage
     Etat = TEST_AXE_3;
-
     break;
 
   case TEST_AXE_3:
+  #if _DEBUG_N1_
     Serial.println("ETAT : TEST AXE 3");
-    //Flag 3
-    //Flag 1
-
+  #endif
     CalibAxe_3.test(Rpm.rpm);
-    //Affichage
     Etat = TEST_AXE_4;
-
     break;
 
   case TEST_AXE_4:
+  #if _DEBUG_N1_
     Serial.println("ETAT : TEST AXE 4");
-    //Flag 4
-    //Flag 1
+  #endif
     CalibAxe_4.test(Rpm.rpm);
-    //Affichage
     Etat = INIT;
-
     break;
   }
 }
@@ -212,8 +197,8 @@ void blink()
   {
   case INIT:
     break;
+    
   case ATTENTE:
-    //Lecture de RPM
     break;
 
   case TEST_AXE_1:
@@ -238,6 +223,7 @@ void blink()
   case EDIT:
     break;
   }
+  //Lecture de RPM
   Rpm.timerOlder = Rpm.timer;
   Rpm.timer = micros();
 }
