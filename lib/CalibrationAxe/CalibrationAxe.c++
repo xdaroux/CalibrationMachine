@@ -1,5 +1,7 @@
 #include "CalibrationAxe.h"
-
+//*****************************************************************************//
+//                                     PUBLIC
+//*****************************************************************************//
 /**
  * @brief Permet d'initialiser tout les parametre de la class CalibrationAxe
  * 
@@ -12,7 +14,9 @@
  * @param pinDigitalDisplayData  : Pin Digital Data d'un afficheur 7 segment
  * @param pinAnalogOffset   : Pin Analog qui permet de contreler le offset
  */
- void CalibrationAxe::init(uint8_t pinAnalog, uint16_t zero, float span, uint8_t pinDigital, String nomAxe, uint8_t pinDigitalDisplayClk, uint8_t pinDigitalDisplayData, uint8_t pinAnalogOffset)
+ void CalibrationAxe::init(uint8_t pinAnalog, uint16_t zero, float span, 
+                            uint8_t pinDigital, String nomAxe, uint8_t pinDigitalDisplayClk, 
+                            uint8_t pinDigitalDisplayData, uint8_t pinAnalogOffset)
     {
         Acc.init(pinAnalog, zero, span);
         NomAxe = nomAxe;
@@ -28,17 +32,7 @@
         AngleAccMinOffset_0_100 = 0;
         AngleAccMaxOffset_0_100 = 0;
     }
-    /**
-     * @brief Permet de reset le tableau des valeurs de test
-     * 
-     */
-    void CalibrationAxe::resetData()
-    {
-        for (int i = 0; i < NB_LECTURE; i++)
-        {
-            RawAcc[i] = 0;
-        }
-    }
+
 
     /**
      * @brief Permet de faire le test de l'axe 
@@ -131,6 +125,173 @@
         }
     }
 
+    
+    
+    /**
+     * @brief Permet d'afficher sur le port seriel les information pertinante a la calibration
+     * 
+     */
+    void CalibrationAxe::afficherPeak()
+    {
+        Serial.println(NomAxe);
+        Serial.print("Peak Min : ");
+        Serial.println(AccMin_raw);
+        Serial.print("Angle Min 0 - 99  : ");
+        Serial.println(AngleAccMin_0_100);
+        Serial.print("Peak Max : ");
+        Serial.println(AccMax_raw);
+        Serial.print("Angle Max 0 - 99  : ");
+        Serial.println(AngleAccMax_0_100);
+        Serial.println("==================================");
+        Serial.print("Afficher G force Min : ");Serial.println(Acc.convertRawToGForce(AccMin_raw));
+        Serial.print("Afficher G force Max : ");Serial.println(Acc.convertRawToGForce(AccMax_raw));
+        Serial.print("Afficher G force Diff : ");Serial.println(Acc.convertRawToGForce(AccMax_raw) - Acc.convertRawToGForce(AccMin_raw) );
+        Serial.println("==================================");
+    }
+
+    /**
+     * @brief Permet d'afficher les informations pertinante lier au poids sur le port serial
+     * 
+     */
+    void CalibrationAxe::afficherInfoCalibPoids()
+    {
+        Serial.println(AccMin_raw);
+        Serial.println(AccMax_raw);
+        Serial.println(abs(AccMax_raw-AccMin_raw));
+        Serial.println(Acc.convertRawToGForce(AccMin_raw));
+        Serial.println(Acc.convertRawToGForce(AccMax_raw));
+        Serial.println(Acc.convertRawToGForce(AccMax_raw)-Acc.convertRawToGForce(AccMin_raw));
+    }
+
+
+    /**
+     * @brief Permet de determiner si il y a eu une erreur potentiel lors du test 
+     *          Lorsque la difference entre le peak min et max difere de 180 +- 15 
+     *          un flag est lever afin d'en informer l'operateur
+     * 
+     * @return true : Lors qu il y a une erreur superieur 
+     * @return false : correcte
+     */
+    bool CalibrationAxe::checkErreur()
+    {   //(A MODIFIER)
+        uint16_t tmp = abs(AngleAccMaxOffset_0_100-AngleAccMinOffset_0_100); // devrai pt refgarder cette information avec un autre variable qui est fixe avant la conversion 
+        if( tmp > 15 && tmp < 75) // Valeur agle diff inacceptable                // FAUX car c'est avec le offset !!!! 
+        {
+            erreur = TRUE;
+        }
+        else
+        {
+            erreur = FALSE;
+        }
+
+        return erreur;   
+    }
+
+
+
+
+    /**
+     * @brief Permet de faire blinker l'affichage 
+     *  (Lors d'une erreur par example) Communiquer d'avantage d'info
+     * 
+     */
+    void CalibrationAxe::blinkDisplay()
+    {
+        if(blinkEtat == 0)
+        {
+            display.clearDisplay();
+            blinkEtat = 1;
+        }
+        else
+        {
+            displayValue();
+            blinkEtat = 0;
+        }
+        
+    }
+    /**
+     * @brief Permet d'editer le offset de l'axe
+     * 
+     */
+    void CalibrationAxe::editOffset()
+    {
+        int16_t offset;
+        uint8_t buff[2];
+        offset = map(analogRead(pinOffset), 0, 1023, -50, 50);
+
+        split_2_digit_number(abs(Offset), buff);
+
+        display.display(2, buff[0]);
+        display.display(3, buff[1]);
+        if (Offset < 0)
+        {
+            display.displaySeg(1, 0b01000000);
+        }
+        else
+        {
+            display.displaySeg(1, 0b00000000);
+        }
+
+        if (offset != Offset)
+        {
+            Offset = offset;
+        }
+    }
+
+    /**
+     * @brief Permet de faire la calibration de l'axe et de l'afficher sur le moniteur serial
+     * 
+     */
+    void CalibrationAxe::calibrationZeroAcc()
+    {
+        Acc.calibrationZero();
+        afficherCalibZero(); 
+    }
+
+    /**
+     * @brief Permet d'afficher le zero de l'accelerometre
+     * 
+     */
+    void CalibrationAxe::afficherCalibZero()
+    {
+        Serial.println("=================Calibration Zero=======================");
+        Serial.println(NomAxe);
+        Serial.print("Zero : ");Serial.println(Acc.Zero);
+        Serial.println("========================================================");
+    }
+
+    /**
+     * @brief Permet d'afficher les information suite a un test sur le port serial
+     * 
+     */
+    void CalibrationAxe::afficherInfoTest()
+    {
+            //afficherTest("Test Apres Moyenne");
+            afficherPeak();
+           // afficherInfoCalibPoids();
+            Serial.print("Valeur avec offset min :");Serial.println(AngleAccMinOffset_0_100);
+            Serial.print("Valeur avec offset Max :");Serial.println(AngleAccMaxOffset_0_100);
+            
+    }
+
+
+
+//*****************************************************************************//
+//                                     PRIVATE
+//*****************************************************************************//
+
+    /**
+     * @brief Permet de reset le tableau des valeurs de test
+     * 
+     */
+    void CalibrationAxe::resetData()
+    {
+        for (int i = 0; i < NB_LECTURE; i++)
+        {
+            RawAcc[i] = 0;
+        }
+    }
+
     /**
      * @brief Permet de verifier si l'interupteur de selection est activer pour cet axe
      * 
@@ -145,6 +306,57 @@
         }
         return FALSE;
     }
+
+    /**
+     * @brief Permet de calculer le poids de facon propotionelle a la rotation et de l'acceleration 
+     * 
+     * @param rpm 
+     */
+    void CalibrationAxe::convertirPoidCalcul(uint16_t rpm)
+    {
+        poidCalculer = ((10*pow(float(Acc.convertRawToGForce(AccMax_raw)-Acc.convertRawToGForce(AccMin_raw)),2)) / (1.1*0.03175*pow(rpm/10,2)) * 1000 )-4.0;
+        Serial.print("POIDS CALCULER : "); Serial.println(poidCalculer);
+    }
+
+    /**
+     * @brief Permet d'appliquer le offset sur la position de l'axe
+     * 
+     */
+    void CalibrationAxe::appliquerOffeset()
+    {
+        int offsetMin = 0;
+        if (Offset < 0)
+        {
+            offsetMin = Offset + 50;
+        }
+        else
+        {
+            offsetMin = Offset - 50;
+        }
+
+        AngleAccMinOffset_0_100 = AngleAccMinInverser + offsetMin; // Offset min different
+        AngleAccMaxOffset_0_100 = AngleAccMaxInverser + Offset;
+        
+
+        if (AngleAccMinOffset_0_100 >= 100)
+        {
+            AngleAccMinOffset_0_100 -= 100;
+        }
+        else if (AngleAccMinOffset_0_100 < 0)
+        {
+            AngleAccMinOffset_0_100 += 100;
+        }
+
+        if (AngleAccMaxOffset_0_100 >= 100)
+        {
+            AngleAccMaxOffset_0_100 -= 100;
+        }
+        else if (AngleAccMaxOffset_0_100 < 0)
+        {
+            AngleAccMaxOffset_0_100 += 100;
+        }
+    }
+
     /**
      * @brief Algoritme qui permet de determiner les valeurs peak negatif(min) et positif(max) 
      *        
@@ -185,80 +397,7 @@
 
     }
 
-    /**
-     * @brief Permet d'afficher sur le port seriel les information pertinante a la calibration
-     * 
-     */
-    void CalibrationAxe::afficherPeak()
-    {
-        Serial.println(NomAxe);
-        Serial.print("Peak Min : ");
-        Serial.println(AccMin_raw);
-        Serial.print("Angle Min 0 - 99  : ");
-        Serial.println(AngleAccMin_0_100);
-        Serial.print("Peak Max : ");
-        Serial.println(AccMax_raw);
-        Serial.print("Angle Max 0 - 99  : ");
-        Serial.println(AngleAccMax_0_100);
-        Serial.println("==================================");
-        Serial.print("Afficher G force Min : ");Serial.println(Acc.convertRawToGForce(AccMin_raw));
-        Serial.print("Afficher G force Max : ");Serial.println(Acc.convertRawToGForce(AccMax_raw));
-        Serial.print("Afficher G force Diff : ");Serial.println(Acc.convertRawToGForce(AccMax_raw) - Acc.convertRawToGForce(AccMin_raw) );
-        Serial.println("==================================");
-    }
 
-    /**
-     * @brief Permet d'afficher les informations pertinante lier au poids sur le port serial
-     * 
-     */
-    void CalibrationAxe::afficherInfoCalibPoids()
-    {
-        Serial.println(AccMin_raw);
-        Serial.println(AccMax_raw);
-        Serial.println(abs(AccMax_raw-AccMin_raw));
-        Serial.println(Acc.convertRawToGForce(AccMin_raw));
-        Serial.println(Acc.convertRawToGForce(AccMax_raw));
-        Serial.println(Acc.convertRawToGForce(AccMax_raw)-Acc.convertRawToGForce(AccMin_raw));
-    }
-    /**
-     * @brief Permet de faire la conversion de toute les valeurs du test 
-     * 
-     */
-    void CalibrationAxe::allConversion()
-    {
-        for (int i = 0; i < NB_LECTURE; i++)
-        {
-            RawAcc[i] = Acc.convertRawToGForce(RawAcc[i]);
-        }
-
-        AccMin_raw = Acc.convertRawToGForce(AccMin_raw);
-        AccMax_raw = Acc.convertRawToGForce(AccMax_raw);
-        AngleAccMin_deg = AngleAccMin_0_100 * (360 / NB_LECTURE);
-        AngleAccMax_deg = AngleAccMax_0_100 * (360 / NB_LECTURE);
-    }
-
-    /**
-     * @brief Permet de determiner si il y a eu une erreur potentiel lors du test 
-     *          Lorsque la difference entre le peak min et max difere de 180 +- 15 
-     *          un flag est lever afin d'en informer l'operateur
-     * 
-     * @return true : Lors qu il y a une erreur superieur 
-     * @return false : correcte
-     */
-    bool CalibrationAxe::checkErreur()
-    {   //(A MODIFIER)
-        uint16_t tmp = abs(AngleAccMaxOffset_0_100-AngleAccMinOffset_0_100); // devrai pt refgarder cette information avec un autre variable qui est fixe avant la conversion 
-        if( tmp > 15 && tmp < 75) // Valeur agle diff inacceptable                // FAUX car c'est avec le offset !!!! 
-        {
-            erreur = TRUE;
-        }
-        else
-        {
-            erreur = FALSE;
-        }
-
-        return erreur;   
-    }
     /**
      * @brief Permet de preparer le data avant d'etre afficher
      *          Et permet de ne pas prendre le valeur extreme ! 
@@ -316,133 +455,18 @@
     }
 
     /**
-     * @brief Permet de faire blinker l'affichage 
-     *  (Lors d'une erreur par example) Communiquer d'avantage d'info
+     * @brief Permet de faire la conversion de toute les valeurs du test 
      * 
      */
-    void CalibrationAxe::blinkDisplay()
+    void CalibrationAxe::allConversion()
     {
-        if(blinkEtat == 0)
+        for (int i = 0; i < NB_LECTURE; i++)
         {
-            display.clearDisplay();
-            blinkEtat = 1;
-        }
-        else
-        {
-            displayValue();
-            blinkEtat = 0;
-        }
-        
-    }
-    /**
-     * @brief Permet d'editer le offset de l'axe
-     * 
-     */
-    void CalibrationAxe::editOffset()
-    {
-        int16_t offset;
-        uint8_t buff[2];
-        offset = map(analogRead(pinOffset), 0, 1023, -50, 50);
-
-        split_2_digit_number(abs(Offset), buff);
-
-        display.display(2, buff[0]);
-        display.display(3, buff[1]);
-        if (Offset < 0)
-        {
-            display.displaySeg(1, 0b01000000);
-        }
-        else
-        {
-            display.displaySeg(1, 0b00000000);
+            RawAcc[i] = Acc.convertRawToGForce(RawAcc[i]);
         }
 
-        if (offset != Offset)
-        {
-            Offset = offset;
-        }
-    }
-
-    /**
-     * @brief Permet d'appliquer le offset sur la position de l'axe
-     * 
-     */
-    void CalibrationAxe::appliquerOffeset()
-    {
-        int offsetMin = 0;
-        if (Offset < 0)
-        {
-            offsetMin = Offset + 50;
-        }
-        else
-        {
-            offsetMin = Offset - 50;
-        }
-
-        AngleAccMinOffset_0_100 = AngleAccMinInverser + offsetMin; // Offset min different
-        AngleAccMaxOffset_0_100 = AngleAccMaxInverser + Offset;
-        
-
-        if (AngleAccMinOffset_0_100 >= 100)
-        {
-            AngleAccMinOffset_0_100 -= 100;
-        }
-        else if (AngleAccMinOffset_0_100 < 0)
-        {
-            AngleAccMinOffset_0_100 += 100;
-        }
-
-        if (AngleAccMaxOffset_0_100 >= 100)
-        {
-            AngleAccMaxOffset_0_100 -= 100;
-        }
-        else if (AngleAccMaxOffset_0_100 < 0)
-        {
-            AngleAccMaxOffset_0_100 += 100;
-        }
-    }
-
-    /**
-     * @brief Permet de faire la calibration de l'axe et de l'afficher sur le moniteur serial
-     * 
-     */
-    void CalibrationAxe::calibrationZeroAcc()
-    {
-        Acc.calibrationZero();
-        afficherCalibZero(); 
-    }
-    /**
-     * @brief Permet d'afficher le zero de l'accelerometre
-     * 
-     */
-    void CalibrationAxe::afficherCalibZero()
-    {
-        Serial.println("=================Calibration Zero=======================");
-        Serial.println(NomAxe);
-        Serial.print("Zero : ");Serial.println(Acc.Zero);
-        Serial.println("========================================================");
-    }
-    /**
-     * @brief Permet d'afficher les information suite a un test sur le port serial
-     * 
-     */
-    void CalibrationAxe::afficherInfoTest()
-    {
-            //afficherTest("Test Apres Moyenne");
-            afficherPeak();
-           // afficherInfoCalibPoids();
-            Serial.print("Valeur avec offset min :");Serial.println(AngleAccMinOffset_0_100);
-            Serial.print("Valeur avec offset Max :");Serial.println(AngleAccMaxOffset_0_100);
-            
-    }
-
-    /**
-     * @brief Permet de calculer le poids de facon propotionelle a la rotation et de l'acceleration 
-     * 
-     * @param rpm 
-     */
-    void CalibrationAxe::convertirPoidCalcul(uint16_t rpm)
-    {
-        poidCalculer = ((10*pow(float(Acc.convertRawToGForce(AccMax_raw)-Acc.convertRawToGForce(AccMin_raw)),2)) / (1.1*0.03175*pow(rpm/10,2)) * 1000 )-4.0;
-        Serial.print("POIDS CALCULER : "); Serial.println(poidCalculer);
+        AccMin_raw = Acc.convertRawToGForce(AccMin_raw);
+        AccMax_raw = Acc.convertRawToGForce(AccMax_raw);
+        AngleAccMin_deg = AngleAccMin_0_100 * (360 / NB_LECTURE);
+        AngleAccMax_deg = AngleAccMax_0_100 * (360 / NB_LECTURE);
     }
