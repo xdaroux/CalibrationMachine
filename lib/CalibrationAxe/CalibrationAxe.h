@@ -28,7 +28,7 @@
 /***********************************************************/
 class CalibrationAxe
 {
-
+private:
     uint8_t pinActiveAxe;
 
 public:
@@ -69,25 +69,33 @@ void init(uint8_t pinAnalog, uint16_t zero, float span, uint8_t pinDigital,
                             String nomAxe, uint8_t pinDigitalDisplayClk, uint8_t pinDigitalDisplayData,
                             uint8_t pinAnalogOffset);
 
-void resetData();
-void test(uint16_t rpm);
-void afficherTest(String info);
-bool checkAxeActive();
-void algoPeak();
-void afficherPeak();
-void afficherInfoCalibPoids();
-void allConversion();
-bool checkErreur();
-void prepareDataAfficher();
-void displayValue();
-void blinkDisplay();
-void editOffset();
-void appliquerOffeset();
 void calibrationZeroAcc();
 void afficherCalibZero();
 void afficherInfoTest();
+
+void test(uint16_t rpm);
+void afficherTest(String info);
+
+
+void afficherPeak();
+void afficherInfoCalibPoids();
+void allConversion();
+
+bool checkErreur();
+void blinkDisplay();
+
+void editOffset();
+
+private : 
+
+void resetData();
+bool checkAxeActive(); 
+
+void algoPeak();
+void appliquerOffeset();
 void convertirPoidCalcul(uint16_t rpm);
-   
+void prepareDataAfficher();
+void displayValue();
 
     // TODO detection forme bizzard genre harmonique peut le faire avec deriver (trouver deux max local)
 
