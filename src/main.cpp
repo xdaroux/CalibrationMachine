@@ -86,7 +86,7 @@ void setup()
 {
   // put your setup code here, to run once:
   Serial.begin(115200);
-  analogReference(EXTERNAL); // use AREF for reference voltage
+  analogReference(EXTERNAL); // use AREF for reference voltage of the accelerometer 
 
   rpm_init(&Rpm);
   RpmDisplay.init(RPM_CLK, RPM_DIO);
@@ -97,7 +97,7 @@ void setup()
   CalibAxe_3.init(pinACC_3, ACC_3_ZERO, ACC_3_SPAN, pinACTIVE_AXE_3, "AXE 3", pinDISPLAY_3_CLK, pinDISPLAY_3_DIO, pinOFFSET);
   CalibAxe_4.init(pinACC_4, ACC_4_ZERO, ACC_4_SPAN, pinACTIVE_AXE_4, "AXE 4", pinDISPLAY_4_CLK, pinDISPLAY_4_DIO, pinOFFSET);
 
-  //calibAllAxeZero();
+  //calibAllAxeZero(); // permet de faire la calibration des axe et d'afficher les informations dans la console (PORT SERIE)
 
   attachInterrupt(digitalPinToInterrupt(pinInterrupt), blink, FALLING);
   pinMode(pinSwitch, INPUT_PULLUP);
@@ -197,7 +197,7 @@ void blink()
   {
   case INIT:
     break;
-    
+
   case ATTENTE:
     break;
 
@@ -247,6 +247,11 @@ bool oldTimerButton(uint16_t timer)
   return FALSE;
 }
 
+/**
+ * @brief Permet de suprimer l'affichage des tous les afficheurs 7 segment
+ *        dedier a l'affichage de la position et du poids
+ * 
+ */
 void clearAllDisplay()
 {
   CalibAxe_1.display.clearDisplay();
@@ -255,6 +260,11 @@ void clearAllDisplay()
   CalibAxe_4.display.clearDisplay();
 }
 
+/**
+ * @brief Permet de lire la valeur du offset et de l'appliquer a tout les 
+ *        axes de la calibrationMachine 
+ *  
+ */
 void editAllOffset()
 {
   CalibAxe_1.editOffset();
@@ -263,6 +273,11 @@ void editAllOffset()
   CalibAxe_4.editOffset();
 }
 
+/**
+ * @brief Permet de faire la calibration du ZERO de tous les axes
+ *        le shaft ne dois pas etre en mouvement
+ * 
+ */
 void calibAllAxeZero()
 {
   CalibAxe_1.calibrationZeroAcc();
@@ -271,6 +286,11 @@ void calibAllAxeZero()
   CalibAxe_4.calibrationZeroAcc();
 }
 
+/**
+ * @brief Permet de verifier si un erreur a ete detecter sur tout les axes.
+ *        Fait blinker l'affichage si une erreur est detecter
+ * 
+ */
 void checkAllErreur()
 {
   if(CalibAxe_1.checkErreur())
