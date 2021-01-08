@@ -18,7 +18,14 @@
 #define TRUE 1
 #define FALSE 0
 #define LUMINOSITE 2
-
+/*****************************************************************/
+// Modification du OUT Selon l'affichage actuelle sur la machine 
+/*****************************************************************/
+#define IN_MIN_POSITION 0
+#define IN_MAX_POSITION 100
+#define OUT_MIN_POSITION 100
+#define OUT_MAX_POSITION 0
+/***********************************************************/
 class CalibrationAxe
 {
 
@@ -27,7 +34,7 @@ class CalibrationAxe
 public:
     String NomAxe;
     Accelerometre Acc;
-    volatile uint8_t FlagNewRotation; // Pourrais aussi juste passer l'adresse de la fonction
+    volatile uint8_t FlagNewRotation; 
     float RawAcc[NB_LECTURE];
     uint32_t NbLectureTotal;
 
@@ -81,10 +88,6 @@ void afficherCalibZero();
 void afficherInfoTest();
 void convertirPoidCalcul(uint16_t rpm);
    
-
-    // TODO Filtrage @ frequence du RPM
-
-    // TODO AngleDiff ~ 180
 
     // TODO detection forme bizzard genre harmonique peut le faire avec deriver (trouver deux max local)
 
