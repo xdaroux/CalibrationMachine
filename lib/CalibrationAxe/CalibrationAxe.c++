@@ -314,8 +314,29 @@
      */
     void CalibrationAxe::convertirPoidCalcul(uint16_t rpm)
     {
+        float N = rpm;
+        float DeltaA = float(Acc.convertRawToGForce(AccMax_raw)-Acc.convertRawToGForce(AccMin_raw));
+        float DeltaX = ((60 / N) / 4) * (DeltaA / 2);
+        float K = 2000; // Entre 2000 et  3000 // Chaque axe a un balancement unique thechniquement
+        float R = 0.03175;
+        float Mu = (-K * DeltaX) / (1.1 * R *pow((N/10),2));
+
+        Serial.print("Mu : ");Serial.println(Mu);
+
         poidCalculer = ((10*pow(float(Acc.convertRawToGForce(AccMax_raw)-Acc.convertRawToGForce(AccMin_raw)),2)) / (1.1*0.03175*pow(rpm/10,2)) * 1000 )-4.0;
         Serial.print("POIDS CALCULER : "); Serial.println(poidCalculer);
+
+        
+
+        //Force = 1.1 * Mu * R * (N/10)^2
+
+        //Force = -K deltaX 
+
+        //Mu = (-k * DeltaX) / (1.1 * R *(N/10)^2)
+
+
+
+        //K ~= 2000 ou 3000
     }
 
     /**
@@ -469,4 +490,15 @@
         AccMax_raw = Acc.convertRawToGForce(AccMax_raw);
         AngleAccMin_deg = AngleAccMin_0_100 * (360 / NB_LECTURE);
         AngleAccMax_deg = AngleAccMax_0_100 * (360 / NB_LECTURE);
+    }
+
+        void CalibrationAxe::convertirPoidEnGrammeCalcul(uint16_t rpm,float diametre)
+    {
+        float N = rpm;
+        float DeltaA = float(Acc.convertRawToGForce(AccMax_raw)-Acc.convertRawToGForce(AccMin_raw));
+        float DeltaX = ((60 / N) / 4) * (DeltaA / 2);
+        float K = 2000; // Entre 2000 et  3000 // Chaque axe a un balancement unique thechniquement
+        float R = diametre / 2;
+        float Mu = (-K * DeltaX) / (1.1 * R *pow((N/10),2));
+
     }
