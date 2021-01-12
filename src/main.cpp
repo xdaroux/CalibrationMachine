@@ -3,6 +3,7 @@
 #include "CalibrationAxe.h"
 #include "RPM_NEW.h"
 #include "displayData.h"
+#include "DiametreShaft.h"
 
 #define _DEBUG_N1_ 0
 
@@ -20,6 +21,9 @@ enum ETAT
 
 //Variable GLobal//
 ETAT Etat = INIT;
+
+DiametreShaft DiamShaft;
+#define pinDiamShaft A14
 
 rpm_t Rpm;
 #define MIN_ACTIF_RPM 100
@@ -88,21 +92,34 @@ void setup()
   Serial.begin(115200);
   analogReference(EXTERNAL); // use AREF for reference voltage of the accelerometer 
 
+  /*---------------RPM---------------*/
   rpm_init(&Rpm);
   RpmDisplay.init(RPM_CLK, RPM_DIO);
   RpmDisplay.set(LUMINOSITE);
+  /*------------- END RPM-------------*/
 
+  /*---------------DiamShaft---------------*/
+  DiamShaft.init(pinDiamShaft);
+  /*-------------END DiamShaft-------------*/
+
+  /*-----------------Calibration Axe-----------------*/
   CalibAxe_1.init(pinACC_1, ACC_1_ZERO, ACC_1_SPAN, pinACTIVE_AXE_1, "AXE 1", pinDISPLAY_1_CLK, pinDISPLAY_1_DIO, pinOFFSET);
   CalibAxe_2.init(pinACC_2, ACC_2_ZERO, ACC_2_SPAN, pinACTIVE_AXE_2, "AXE 2", pinDISPLAY_2_CLK, pinDISPLAY_2_DIO, pinOFFSET);
   CalibAxe_3.init(pinACC_3, ACC_3_ZERO, ACC_3_SPAN, pinACTIVE_AXE_3, "AXE 3", pinDISPLAY_3_CLK, pinDISPLAY_3_DIO, pinOFFSET);
   CalibAxe_4.init(pinACC_4, ACC_4_ZERO, ACC_4_SPAN, pinACTIVE_AXE_4, "AXE 4", pinDISPLAY_4_CLK, pinDISPLAY_4_DIO, pinOFFSET);
+  /*---------------END Calibration Axe---------------*/
+
 
   //calibAllAxeZero(); // permet de faire la calibration des axe et d'afficher les informations dans la console (PORT SERIE)
 
   attachInterrupt(digitalPinToInterrupt(pinInterrupt), blink, FALLING);
   pinMode(pinSwitch, INPUT_PULLUP);
 
+  /*----------------OFFSET-----------------*/
   editAllOffset();
+  /*-------------- END OFFSET---------------*/
+
+  
   clearAllDisplay();
 }
 
@@ -114,6 +131,8 @@ void loop()
     uptade_display_rpm(RpmDisplay, Rpm.rpm);
     timerAfficherRPM = millis();
   }
+
+  DiamShaft.main(RpmDisplay);
 
   switch (Etat)
   {

@@ -40,3 +40,4 @@ void split_2_digit_number(uint8_t num, uint8_t *buff);
 void uptade_display_acc(TM1637 acc, uint8_t angle, uint8_t poids);
 void split_4_digit_number(uint32_t num, uint8_t *buff);
 void uptade_display_rpm(TM1637 rpmDisplay, uint32_t rpm);
+void uptade_display_diametreShaft(TM1637 DiamShaftDisplay, float diamShaft);

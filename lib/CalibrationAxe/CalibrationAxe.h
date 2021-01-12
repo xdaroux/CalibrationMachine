@@ -96,6 +96,7 @@ void appliquerOffeset();
 void convertirPoidCalcul(uint16_t rpm);
 void prepareDataAfficher();
 void displayValue();
+void convertirPoidEnGrammeCalcul(uint16_t rpm, float diametre);
 
     // TODO detection forme bizzard genre harmonique peut le faire avec deriver (trouver deux max local)
 

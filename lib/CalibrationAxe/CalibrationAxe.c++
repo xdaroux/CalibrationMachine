@@ -501,4 +501,6 @@
         float R = diametre / 2;
         float Mu = (-K * DeltaX) / (1.1 * R *pow((N/10),2));
 
+        Serial.print("MU : ");Serial.println(Mu);
+
     }
