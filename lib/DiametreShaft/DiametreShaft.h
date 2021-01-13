@@ -28,7 +28,7 @@ private:
 
 public:
 
-    uint16_t rawDia;
+    uint32_t rawDia;
     float Diametre_po;
     float Diametre_m;
     float Rayon_po;
@@ -39,16 +39,17 @@ public:
     void init(uint8_t pinAnalog)
     {
         pinDia = pinAnalog;
+        lectureDiametre();
     }
 
     void main(TM1637 display)
     {
-        if(millis() - TimerLecture > TIME_ENTRE_LECTURE )
-        {
+        //if(millis() - TimerLecture > TIME_ENTRE_LECTURE )
+        //{
             TimerLecture = millis();
             lectureDiametre();
             displayDiametre(display);
-        }
+        //}
     }
 
     void displayDiametre(TM1637 display)
@@ -58,25 +59,27 @@ public:
         
         uint32_t tmp_diametre = DiamDisplay;
         lectureDiametre();
-        if(abs(tmp_diametre - DiamDisplay) > 2)
-        {
-            Serial.println("Difference superieur a 2");
+       
+            
             display.clearDisplay();
             display.point(POINT_ON);
-            while(millis()-tmp_timer < 2000)
+            while(millis()-tmp_timer < 5000)
             {
                 lectureDiametre();
                 uptade_display_diametreShaft(display);
-
             }
             display.point(POINT_OFF);
-        }
+        
 
     }
 
     void lectureDiametre()
     {
-        rawDia = analogRead(pinDia);
+        for(int i = 0; i < 100; i++)
+        {
+        rawDia += analogRead(pinDia);
+        }
+        rawDia = rawDia / 100;
         Diametre_po = convert_raw_po(rawDia);
         Diametre_m = convert_po_meter(Diametre_po);
         Rayon_po = Diametre_po / 2;

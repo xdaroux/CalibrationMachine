@@ -13,6 +13,8 @@
 #include <TM1637.h>
 #include "displayData.h"
 
+#define _DEBUG_N1_ 1
+
 #define NB_LECTURE 100
 #define NB_TEST 20
 #define TRUE 1

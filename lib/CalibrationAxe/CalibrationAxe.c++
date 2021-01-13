@@ -493,15 +493,16 @@
         AngleAccMax_deg = AngleAccMax_0_100 * (360 / NB_LECTURE);
     }
 
-        void CalibrationAxe::convertirPoidEnGrammeCalcul(uint16_t rpm,float diametre)
+    
+    void CalibrationAxe::convertirPoidEnGrammeCalcul(uint16_t rpm,float diametre)
     {
         float N = rpm;
         float DeltaA = float(Acc.convertRawToGForce(AccMax_raw)-Acc.convertRawToGForce(AccMin_raw));
         float DeltaX = ((60 / N) / 4) * (DeltaA / 2);
         float K = 2000; // Entre 2000 et  3000 // Chaque axe a un balancement unique thechniquement
         float R = diametre / 2;
-        float Mu = (-K * DeltaX) / (1.1 * R *pow((N/10),2));
+        float Mu = (-K * DeltaX) / (1.1 * R *pow((N/10),2)); // kg for now 
 
-        Serial.print("MU : ");Serial.println(Mu);
+        Serial.print("MU : ");Serial.println(Mu,5);
 
     }

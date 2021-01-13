@@ -103,10 +103,10 @@ void setup()
   /*-------------END DiamShaft-------------*/
 
   /*-----------------Calibration Axe-----------------*/
-  CalibAxe_1.init(pinACC_1, ACC_1_ZERO, ACC_1_SPAN, pinACTIVE_AXE_1, "AXE 1", pinDISPLAY_1_CLK, pinDISPLAY_1_DIO, pinOFFSET);
+  CalibAxe_1.init(pinACC_1, ACC_1_ZERO, ACC_1_SPAN, pinACTIVE_AXE_1, "REAR", pinDISPLAY_1_CLK, pinDISPLAY_1_DIO, pinOFFSET);
   CalibAxe_2.init(pinACC_2, ACC_2_ZERO, ACC_2_SPAN, pinACTIVE_AXE_2, "AXE 2", pinDISPLAY_2_CLK, pinDISPLAY_2_DIO, pinOFFSET);
-  CalibAxe_3.init(pinACC_3, ACC_3_ZERO, ACC_3_SPAN, pinACTIVE_AXE_3, "AXE 3", pinDISPLAY_3_CLK, pinDISPLAY_3_DIO, pinOFFSET);
-  CalibAxe_4.init(pinACC_4, ACC_4_ZERO, ACC_4_SPAN, pinACTIVE_AXE_4, "AXE 4", pinDISPLAY_4_CLK, pinDISPLAY_4_DIO, pinOFFSET);
+  CalibAxe_3.init(pinACC_3, ACC_3_ZERO, ACC_3_SPAN, pinACTIVE_AXE_3, "AXE 1", pinDISPLAY_3_CLK, pinDISPLAY_3_DIO, pinOFFSET);
+  CalibAxe_4.init(pinACC_4, ACC_4_ZERO, ACC_4_SPAN, pinACTIVE_AXE_4, "DRIVE", pinDISPLAY_4_CLK, pinDISPLAY_4_DIO, pinOFFSET);
   /*---------------END Calibration Axe---------------*/
 
 
@@ -130,13 +130,9 @@ void loop()
     rpm_calcul(&Rpm);
     uptade_display_rpm(RpmDisplay, Rpm.rpm);
     timerAfficherRPM = millis();
-    Serial.print("DIAMETRE : ");Serial.println(DiamShaft.DiamDisplay);
   }
 
-  if(Rpm.rpm < 100)
-  {
-    DiamShaft.main(RpmDisplay);
-  }
+
   
   switch (Etat)
   {
@@ -147,6 +143,8 @@ void loop()
 
   case EDIT:
     editAllOffset();
+    DiamShaft.main(RpmDisplay);
+  
     if (oldTimerButton(TIME_OLD_BUTTON_ATTENTE))
     {
       Etat = ATTENTE;
