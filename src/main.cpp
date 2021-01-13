@@ -70,7 +70,7 @@ CalibrationAxe CalibAxe_4;
 #define NOM_AXE_4 "DRIVE"
 #define pinACC_4 A3
 #define pinACTIVE_AXE_4 53
-#define ACC_4_ZERO 508//481  // 512 sans lecture
+#define ACC_4_ZERO 501//481  // 512 sans lecture
 #define ACC_4_SPAN 102
 #define CONSTANTE_DE_RAPEL_K_4 -2000
 #define pinDISPLAY_4_DIO 22

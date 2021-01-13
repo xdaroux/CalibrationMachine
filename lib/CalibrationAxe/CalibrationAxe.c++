@@ -447,13 +447,13 @@
         }
 
         //Preparation du poids a afficher
-        if(poidCalculer < 0)
+        if(MasseUnbalance_g < 0)
         {
             afficherDisplayPoid = 0;
         }
         else
         {
-        afficherDisplayPoid = poidCalculer;
+        afficherDisplayPoid = MasseUnbalance_g;
         }
 
         if(afficherDisplayPoid > 99)
