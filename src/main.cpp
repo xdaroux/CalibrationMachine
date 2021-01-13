@@ -41,6 +41,7 @@ CalibrationAxe CalibAxe_1;
 #define pinACTIVE_AXE_1 47
 #define ACC_1_ZERO 515//484 // 515 sans lecture 
 #define ACC_1_SPAN 102
+#define CONSTANTE_DE_RAPEL_K_1 -2000
 #define pinDISPLAY_1_DIO 28
 #define pinDISPLAY_1_CLK 29
 
@@ -49,6 +50,7 @@ CalibrationAxe CalibAxe_2;
 #define pinACTIVE_AXE_2 49
 #define ACC_2_ZERO 502//470  //500 sans lecture 
 #define ACC_2_SPAN 102
+#define CONSTANTE_DE_RAPEL_K_2 -2000
 #define pinDISPLAY_2_DIO 26
 #define pinDISPLAY_2_CLK 27
 
@@ -57,6 +59,7 @@ CalibrationAxe CalibAxe_3;
 #define pinACTIVE_AXE_3 51
 #define ACC_3_ZERO 504//475 // 505 sans lecture 
 #define ACC_3_SPAN 102
+#define CONSTANTE_DE_RAPEL_K_3 -2000
 #define pinDISPLAY_3_DIO 24
 #define pinDISPLAY_3_CLK 25
 
@@ -65,6 +68,7 @@ CalibrationAxe CalibAxe_4;
 #define pinACTIVE_AXE_4 53
 #define ACC_4_ZERO 508//481  // 512 sans lecture
 #define ACC_4_SPAN 102
+#define CONSTANTE_DE_RAPEL_K_4 -2000
 #define pinDISPLAY_4_DIO 22
 #define pinDISPLAY_4_CLK 23
 
@@ -103,10 +107,10 @@ void setup()
   /*-------------END DiamShaft-------------*/
 
   /*-----------------Calibration Axe-----------------*/
-  CalibAxe_1.init(pinACC_1, ACC_1_ZERO, ACC_1_SPAN, pinACTIVE_AXE_1, "REAR", pinDISPLAY_1_CLK, pinDISPLAY_1_DIO, pinOFFSET);
-  CalibAxe_2.init(pinACC_2, ACC_2_ZERO, ACC_2_SPAN, pinACTIVE_AXE_2, "AXE 2", pinDISPLAY_2_CLK, pinDISPLAY_2_DIO, pinOFFSET);
-  CalibAxe_3.init(pinACC_3, ACC_3_ZERO, ACC_3_SPAN, pinACTIVE_AXE_3, "AXE 1", pinDISPLAY_3_CLK, pinDISPLAY_3_DIO, pinOFFSET);
-  CalibAxe_4.init(pinACC_4, ACC_4_ZERO, ACC_4_SPAN, pinACTIVE_AXE_4, "DRIVE", pinDISPLAY_4_CLK, pinDISPLAY_4_DIO, pinOFFSET);
+  CalibAxe_1.init(pinACC_1, ACC_1_ZERO, ACC_1_SPAN, pinACTIVE_AXE_1, "REAR", pinDISPLAY_1_CLK, pinDISPLAY_1_DIO, pinOFFSET,CONSTANTE_DE_RAPEL_K_1);
+  CalibAxe_2.init(pinACC_2, ACC_2_ZERO, ACC_2_SPAN, pinACTIVE_AXE_2, "AXE 2", pinDISPLAY_2_CLK, pinDISPLAY_2_DIO, pinOFFSET,CONSTANTE_DE_RAPEL_K_2);
+  CalibAxe_3.init(pinACC_3, ACC_3_ZERO, ACC_3_SPAN, pinACTIVE_AXE_3, "AXE 1", pinDISPLAY_3_CLK, pinDISPLAY_3_DIO, pinOFFSET,CONSTANTE_DE_RAPEL_K_3);
+  CalibAxe_4.init(pinACC_4, ACC_4_ZERO, ACC_4_SPAN, pinACTIVE_AXE_4, "DRIVE", pinDISPLAY_4_CLK, pinDISPLAY_4_DIO, pinOFFSET,CONSTANTE_DE_RAPEL_K_4);
   /*---------------END Calibration Axe---------------*/
 
 

@@ -16,7 +16,7 @@
  */
  void CalibrationAxe::init(uint8_t pinAnalog, uint16_t zero, float span, 
                             uint8_t pinDigital, String nomAxe, uint8_t pinDigitalDisplayClk, 
-                            uint8_t pinDigitalDisplayData, uint8_t pinAnalogOffset)
+                            uint8_t pinDigitalDisplayData, uint8_t pinAnalogOffset,float constanteDeRapel)
     {
         Acc.init(pinAnalog, zero, span);
         NomAxe = nomAxe;
@@ -31,6 +31,7 @@
         erreur = 0;
         AngleAccMinOffset_0_100 = 0;
         AngleAccMaxOffset_0_100 = 0;
+        ConstanteDeRapel_K = constanteDeRapel;
     }
 
 
@@ -134,20 +135,22 @@
      */
     void CalibrationAxe::afficherPeak()
     {
-        Serial.println(NomAxe);
-        Serial.print("Peak Min : ");
-        Serial.println(AccMin_raw);
-        Serial.print("Angle Min 0 - 99  : ");
-        Serial.println(AngleAccMin_0_100);
-        Serial.print("Peak Max : ");
-        Serial.println(AccMax_raw);
-        Serial.print("Angle Max 0 - 99  : ");
-        Serial.println(AngleAccMax_0_100);
+        Serial.println("\n-------------------------------------");
+        Serial.print("NOM AXE : ");Serial.println(NomAxe);
+        Serial.println("-------------------------------------");
+        Serial.print("Peak Min : ");Serial.println(AccMin_raw);
+        Serial.print("Angle Min 0 - 99  : ");Serial.println(AngleAccMin_0_100);
+        Serial.print("Peak Max : ");Serial.println(AccMax_raw);
+        Serial.print("Angle Max 0 - 99  : ");Serial.println(AngleAccMax_0_100);
+        Serial.print("Valeur avec offset min :");Serial.println(AngleAccMinOffset_0_100);
+        Serial.print("Valeur avec offset Max :");Serial.println(AngleAccMaxOffset_0_100);
         Serial.println("==================================");
         Serial.print("Afficher G force Min : ");Serial.println(Acc.convertRawToGForce(AccMin_raw));
         Serial.print("Afficher G force Max : ");Serial.println(Acc.convertRawToGForce(AccMax_raw));
         Serial.print("Afficher G force Diff : ");Serial.println(Acc.convertRawToGForce(AccMax_raw) - Acc.convertRawToGForce(AccMin_raw) );
+        Serial.print("Masse unbalance(g) : ");Serial.println(MasseUnbalance_g);
         Serial.println("==================================");
+        Serial.println("-------------------------------------");
     }
 
     /**
@@ -270,8 +273,7 @@
             //afficherTest("Test Apres Moyenne");
             afficherPeak();
            // afficherInfoCalibPoids();
-            Serial.print("Valeur avec offset min :");Serial.println(AngleAccMinOffset_0_100);
-            Serial.print("Valeur avec offset Max :");Serial.println(AngleAccMaxOffset_0_100);
+
             
     }
 
@@ -318,11 +320,11 @@
         float N = rpm;
         float DeltaA = float(Acc.convertRawToGForce(AccMax_raw)-Acc.convertRawToGForce(AccMin_raw));
         float DeltaX = ((60 / N) / 4) * (DeltaA / 2);
-        float K = 2000; // Entre 2000 et  3000 // Chaque axe a un balancement unique thechniquement
+        float K = ConstanteDeRapel_K; // Entre 2000 et  3000 // Chaque axe a un balancement unique thechniquement
         float R = 0.03175;
         float Mu = (-K * DeltaX) / (1.1 * R *pow((N/10),2));
 
-        Serial.print("Mu : ");Serial.println(Mu);
+        //Serial.print("Mu : ");Serial.println(Mu);
 
         poidCalculer = ((10*pow(float(Acc.convertRawToGForce(AccMax_raw)-Acc.convertRawToGForce(AccMin_raw)),2)) / (1.1*0.03175*pow(rpm/10,2)) * 1000 )-4.0;
         Serial.print("POIDS CALCULER : "); Serial.println(poidCalculer);
@@ -499,10 +501,8 @@
         float N = rpm;
         float DeltaA = float(Acc.convertRawToGForce(AccMax_raw)-Acc.convertRawToGForce(AccMin_raw));
         float DeltaX = ((60 / N) / 4) * (DeltaA / 2);
-        float K = 2000; // Entre 2000 et  3000 // Chaque axe a un balancement unique thechniquement
+        float K = ConstanteDeRapel_K; // Entre 2000 et  3000 // Chaque axe a un balancement unique thechniquement
         float R = diametre / 2;
         float Mu = (-K * DeltaX) / (1.1 * R *pow((N/10),2)); // kg for now 
-
-        Serial.print("MU : ");Serial.println(Mu,5);
-
+        MasseUnbalance_g = Mu * 1000;
     }

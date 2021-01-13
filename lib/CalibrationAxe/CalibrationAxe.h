@@ -64,14 +64,16 @@ public:
 
     bool erreur;
 
+    float ConstanteDeRapel_K; //Newton * Metre
     float poidCalculer;
+    float MasseUnbalance_g;
 
     
 
 
 void init(uint8_t pinAnalog, uint16_t zero, float span, uint8_t pinDigital,
                             String nomAxe, uint8_t pinDigitalDisplayClk, uint8_t pinDigitalDisplayData,
-                            uint8_t pinAnalogOffset);
+                            uint8_t pinAnalogOffset,float constanteDeRapel);
 
 void calibrationZeroAcc();
 void afficherCalibZero();
