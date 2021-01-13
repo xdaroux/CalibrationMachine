@@ -44,7 +44,7 @@
      *         L'affichage sur les 7 segment de la position et du poids
      * @param rpm : la valeur du rpm qui permet de calculer les temps entre les prises de valeur
      */
-    void CalibrationAxe::test(uint16_t rpm)
+    void CalibrationAxe::test(uint16_t rpm, float diametre)
     {
         // reset 
         AngleAccMinOffset_0_100 = 0;

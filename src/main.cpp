@@ -180,7 +180,7 @@ void loop()
   #if _DEBUG_N1_
     Serial.println("ETAT : TEST AXE 1");
   #endif
-    CalibAxe_1.test(Rpm.rpm);
+    CalibAxe_1.test(Rpm.rpm,DiamShaft.Diametre_m);
     Etat = TEST_AXE_2;
     break;
 
@@ -188,7 +188,7 @@ void loop()
   #if _DEBUG_N1_
     Serial.println("ETAT : TEST AXE 2");
   #endif
-    CalibAxe_2.test(Rpm.rpm);
+    CalibAxe_2.test(Rpm.rpm,DiamShaft.Diametre_m);
     Etat = TEST_AXE_3;
     break;
 
@@ -196,7 +196,7 @@ void loop()
   #if _DEBUG_N1_
     Serial.println("ETAT : TEST AXE 3");
   #endif
-    CalibAxe_3.test(Rpm.rpm);
+    CalibAxe_3.test(Rpm.rpm,DiamShaft.Diametre_m);
     Etat = TEST_AXE_4;
     break;
 
@@ -204,7 +204,7 @@ void loop()
   #if _DEBUG_N1_
     Serial.println("ETAT : TEST AXE 4");
   #endif
-    CalibAxe_4.test(Rpm.rpm);
+    CalibAxe_4.test(Rpm.rpm,DiamShaft.Diametre_m);
     Etat = INIT;
     break;
   }

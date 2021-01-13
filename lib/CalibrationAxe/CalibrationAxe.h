@@ -64,6 +64,8 @@ public:
 
     float poidCalculer;
 
+    
+
 
 void init(uint8_t pinAnalog, uint16_t zero, float span, uint8_t pinDigital,
                             String nomAxe, uint8_t pinDigitalDisplayClk, uint8_t pinDigitalDisplayData,
@@ -73,7 +75,7 @@ void calibrationZeroAcc();
 void afficherCalibZero();
 void afficherInfoTest();
 
-void test(uint16_t rpm);
+void test(uint16_t rpm, float diametre);
 void afficherTest(String info);
 
 
