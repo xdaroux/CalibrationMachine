@@ -130,10 +130,14 @@ void loop()
     rpm_calcul(&Rpm);
     uptade_display_rpm(RpmDisplay, Rpm.rpm);
     timerAfficherRPM = millis();
+    Serial.print("DIAMETRE : ");Serial.println(DiamShaft.DiamDisplay);
   }
 
-  DiamShaft.main(RpmDisplay);
-
+  if(Rpm.rpm < 100)
+  {
+    DiamShaft.main(RpmDisplay);
+  }
+  
   switch (Etat)
   {
   case INIT:

@@ -54,17 +54,20 @@ public:
     void displayDiametre(TM1637 display)
     {
         uint32_t tmp_timer = millis();
-        display.clearDisplay();
+       
         
         uint32_t tmp_diametre = DiamDisplay;
         lectureDiametre();
-        if(tmp_diametre != DiamDisplay)
+        if(abs(tmp_diametre - DiamDisplay) > 2)
         {
+            Serial.println("Difference superieur a 2");
+            display.clearDisplay();
             display.point(POINT_ON);
-            while(tmp_timer < 2000)
+            while(millis()-tmp_timer < 2000)
             {
                 lectureDiametre();
                 uptade_display_diametreShaft(display);
+
             }
             display.point(POINT_OFF);
         }
@@ -79,6 +82,8 @@ public:
         Rayon_po = Diametre_po / 2;
         Rayon_m = Diametre_m /2;
         DiamDisplay = Diametre_po * 100;
+
+        
     }
 
     void uptade_display_diametreShaft(TM1637 DiamShaftDisplay)

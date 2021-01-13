@@ -95,7 +95,7 @@
             }
             
             
-            algoPeak(); 
+            algoPeak();     
             convertirPoidCalcul(rpm);
             convertirPoidEnGrammeCalcul( rpm, diametre);
             prepareDataAfficher(); 
