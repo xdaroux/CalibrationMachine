@@ -56,8 +56,6 @@ public:
     {
         uint32_t tmp_timer = millis();
        
-        
-        uint32_t tmp_diametre = DiamDisplay;
         lectureDiametre();
        
             
