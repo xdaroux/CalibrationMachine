@@ -502,7 +502,7 @@
     {
         float N = rpm;
         float DeltaA = float(Acc.convertRawToGForce(AccMax_raw)-Acc.convertRawToGForce(AccMin_raw));
-        float DeltaX = pow(((60 / N) / 4),2) * (DeltaA / 2);
+        float DeltaX = ((60 / N) / 4) * (DeltaA / 2);
         float K = ConstanteDeRapel_K; // Entre 2000 et  3000 // Chaque axe a un balancement unique thechniquement
         float R = diametre / 2;
         float Mu = (-K * DeltaX) / (1.1 * R *pow((N/10),2)); // kg for now 
