@@ -44,31 +44,14 @@ public:
 
     void main(TM1637 display)
     {
-        //if(millis() - TimerLecture > TIME_ENTRE_LECTURE )
-        //{
             TimerLecture = millis();
             lectureDiametre();
-            displayDiametre(display);
-        //}
+            displayDiametre(display);  
     }
 
     void displayDiametre(TM1637 display)
     {
-        uint32_t tmp_timer = millis();
-       
-        lectureDiametre();
-       
-            
-            display.clearDisplay();
-            display.point(POINT_ON);
-            while(millis()-tmp_timer < 5000)
-            {
-                lectureDiametre();
-                uptade_display_diametreShaft(display);
-            }
-            display.point(POINT_OFF);
-        
-
+        uptade_display_diametreShaft(display);
     }
 
     void lectureDiametre()
@@ -83,8 +66,6 @@ public:
         Rayon_po = Diametre_po / 2;
         Rayon_m = Diametre_m /2;
         DiamDisplay = Diametre_po * 100;
-
-        
     }
 
     void uptade_display_diametreShaft(TM1637 DiamShaftDisplay)
