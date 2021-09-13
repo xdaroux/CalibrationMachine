@@ -31,43 +31,65 @@ unsigned long timerAfficherRPM = millis();
 uint32_t timerOldButton = millis();
 
 uint32_t timeOlderErreur = millis();
+uint32_t timerOlderDiameterRefresh = millis();
 
-#define RPM_DIO 30
-#define RPM_CLK 31
+#define RPM_DIO 24
+#define RPM_CLK 25
 TM1637 RpmDisplay;
 
+#define DIAMETER_DIO 22
+#define DIAMETER_CLK 23
+TM1637 DiameterDisplay;
+
+
 CalibrationAxe CalibAxe_1;
-#define NOM_AXE_1 "REAR"
-#define pinACC_1 A0
-#define pinACTIVE_AXE_1 47
+#define NOM_AXE_1 "Drive"
+#define pinACC_1 A1
+#define pinACTIVE_AXE_1 49
 #define ACC_1_ZERO 507//484 // 515 sans lecture 
 #define ACC_1_SPAN 102
 #define CONSTANTE_DE_RAPEL_K_1 -2850
 #define pinDISPLAY_1_DIO 28
 #define pinDISPLAY_1_CLK 29
 
+#define pinDISPLAY_KG_1_DIO 34
+#define pinDISPLAY_KG_1_CLK 35
+#define pinDISPLAY_POS_1_DIO 36
+#define pinDISPLAY_POS_1_CLK 37
+
+
 CalibrationAxe CalibAxe_2;
-#define NOM_AXE_2 "AXE 2"
-#define pinACC_2 A1
-#define pinACTIVE_AXE_2 49
+#define NOM_AXE_2 "AXE 1"
+#define pinACC_2 A3
+#define pinACTIVE_AXE_2 48
 #define ACC_2_ZERO 501//470  //500 sans lecture 
 #define ACC_2_SPAN 102
 #define CONSTANTE_DE_RAPEL_K_2 -1425
 #define pinDISPLAY_2_DIO 26
 #define pinDISPLAY_2_CLK 27
 
+#define pinDISPLAY_KG_2_DIO 30
+#define pinDISPLAY_KG_2_CLK 31
+#define pinDISPLAY_POS_2_DIO 32
+#define pinDISPLAY_POS_2_CLK 33
+
 CalibrationAxe CalibAxe_3;
-#define NOM_AXE_3 "AXE 1"
-#define pinACC_3 A2
-#define pinACTIVE_AXE_3 51
+#define NOM_AXE_3 "AXE 2"
+#define pinACC_3 A5
+#define pinACTIVE_AXE_3 47
 #define ACC_3_ZERO 500//475 // 505 sans lecture 
 #define ACC_3_SPAN 102
 #define CONSTANTE_DE_RAPEL_K_3 -1425
 #define pinDISPLAY_3_DIO 24
 #define pinDISPLAY_3_CLK 25
 
+#define pinDISPLAY_KG_3_DIO 26
+#define pinDISPLAY_KG_3_CLK 27
+#define pinDISPLAY_POS_3_DIO 28
+#define pinDISPLAY_POS_3_CLK 29
+
 CalibrationAxe CalibAxe_4;
-#define NOM_AXE_4 "DRIVE"
+#define NOM_AXE_4 "Not EXISTE"
 #define pinACC_4 A3
 #define pinACTIVE_AXE_4 53
 #define ACC_4_ZERO 508//481  // 512 sans lecture
@@ -76,6 +98,7 @@ CalibrationAxe CalibAxe_4;
 #define pinDISPLAY_4_DIO 22
 #define pinDISPLAY_4_CLK 23
 
+//------------------------------------------------//
 #define pinSwitch 13
 #define pinInterrupt 2
 #define pinOFFSET A15
@@ -85,6 +108,7 @@ CalibrationAxe CalibAxe_4;
 #define TIME_BLINK_ERREUR 500
 #define TIME_OLD_BUTTON_ATTENTE 2000
 #define TIME_OLD_BUTTON_EDIT 5000
+#define TIME_REFRESH_DIAMETER 500
 
 //Declaration Fonction//
 void blink();
@@ -107,14 +131,17 @@ void setup()
   /*------------- END RPM-------------*/
 
   /*---------------DiamShaft---------------*/
+  DiameterDisplay.init(DIAMETER_CLK, DIAMETER_DIO);
+  DiameterDisplay.set(LUMINOSITE);
+
   DiamShaft.init(pinDiamShaft);
   /*-------------END DiamShaft-------------*/
 
   /*-----------------Calibration Axe-----------------*/
-  CalibAxe_1.init(pinACC_1, ACC_1_ZERO, ACC_1_SPAN, pinACTIVE_AXE_1, NOM_AXE_1, pinDISPLAY_1_CLK, pinDISPLAY_1_DIO, pinOFFSET,CONSTANTE_DE_RAPEL_K_1);
-  CalibAxe_2.init(pinACC_2, ACC_2_ZERO, ACC_2_SPAN, pinACTIVE_AXE_2, NOM_AXE_2, pinDISPLAY_2_CLK, pinDISPLAY_2_DIO, pinOFFSET,CONSTANTE_DE_RAPEL_K_2);
-  CalibAxe_3.init(pinACC_3, ACC_3_ZERO, ACC_3_SPAN, pinACTIVE_AXE_3, NOM_AXE_3, pinDISPLAY_3_CLK, pinDISPLAY_3_DIO, pinOFFSET,CONSTANTE_DE_RAPEL_K_3);
-  CalibAxe_4.init(pinACC_4, ACC_4_ZERO, ACC_4_SPAN, pinACTIVE_AXE_4, NOM_AXE_4, pinDISPLAY_4_CLK, pinDISPLAY_4_DIO, pinOFFSET,CONSTANTE_DE_RAPEL_K_4);
+  CalibAxe_1.init(pinACC_1, ACC_1_ZERO, ACC_1_SPAN, pinACTIVE_AXE_1, NOM_AXE_1, pinDISPLAY_POS_1_CLK, pinDISPLAY_POS_1_DIO,pinDISPLAY_KG_1_CLK,pinDISPLAY_KG_1_DIO, pinOFFSET,CONSTANTE_DE_RAPEL_K_1);
+  CalibAxe_2.init(pinACC_2, ACC_2_ZERO, ACC_2_SPAN, pinACTIVE_AXE_2, NOM_AXE_2, pinDISPLAY_POS_2_CLK, pinDISPLAY_POS_2_DIO,pinDISPLAY_KG_2_CLK,pinDISPLAY_KG_2_DIO, pinOFFSET,CONSTANTE_DE_RAPEL_K_2);
+  CalibAxe_3.init(pinACC_3, ACC_3_ZERO, ACC_3_SPAN, pinACTIVE_AXE_3, NOM_AXE_3, pinDISPLAY_POS_3_CLK, pinDISPLAY_POS_3_DIO,pinDISPLAY_KG_3_CLK,pinDISPLAY_KG_3_DIO, pinOFFSET,CONSTANTE_DE_RAPEL_K_3);
+  CalibAxe_4.init(pinACC_4, ACC_4_ZERO, ACC_4_SPAN, pinACTIVE_AXE_4, NOM_AXE_4, 555, 555,555,555, pinOFFSET, CONSTANTE_DE_RAPEL_K_4); // Disable For now 
   /*---------------END Calibration Axe---------------*/
 
 
@@ -150,14 +177,14 @@ void loop()
     break;
 
   case EDIT:
-  RpmDisplay.point(POINT_ON);
+  DiameterDisplay.point(POINT_ON);
   while(oldTimerButton(TIME_OLD_BUTTON_ATTENTE) != TRUE)
   {
     editAllOffset();
-    DiamShaft.main(RpmDisplay);
+    DiamShaft.main(DiameterDisplay);
   }
-  RpmDisplay.point(POINT_OFF);
-  RpmDisplay.clearDisplay();
+  DiameterDisplay.point(POINT_OFF);
+  DiameterDisplay.clearDisplay();
   clearAllDisplay();
   Etat = ATTENTE;
     break;
@@ -174,6 +201,12 @@ void loop()
       }
     }
 
+
+    //Diameter Check UP 
+    if(millis() - timerOlderDiameterRefresh > TIME_REFRESH_DIAMETER)
+    {
+      DiamShaft.main(DiameterDisplay);
+    }
 
     
     if (Rpm.rpm > MIN_ACTIF_RPM && digitalRead(pinSwitch) == LOW)
@@ -210,7 +243,7 @@ void loop()
     Serial.println("ETAT : TEST AXE 3");
   #endif
     CalibAxe_3.test(Rpm.rpm,DiamShaft.Diametre_m);
-    Etat = TEST_AXE_4;
+    Etat = INIT; // Cancel AXE.4 
     break;
 
   case TEST_AXE_4:
@@ -286,10 +319,15 @@ bool oldTimerButton(uint16_t timer)
  */
 void clearAllDisplay()
 {
-  CalibAxe_1.display.clearDisplay();
-  CalibAxe_2.display.clearDisplay();
-  CalibAxe_3.display.clearDisplay();
-  CalibAxe_4.display.clearDisplay();
+  CalibAxe_1.displayPosition.clearDisplay();
+  CalibAxe_2.displayPosition.clearDisplay();
+  CalibAxe_3.displayPosition.clearDisplay();
+  CalibAxe_4.displayPosition.clearDisplay();
+
+  CalibAxe_1.displayPoids.clearDisplay();
+  CalibAxe_2.displayPoids.clearDisplay();
+  CalibAxe_3.displayPoids.clearDisplay();
+  CalibAxe_4.displayPoids.clearDisplay();
 }
 
 /**

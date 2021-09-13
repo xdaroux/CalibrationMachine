@@ -56,16 +56,16 @@ public:
 
     void lectureDiametre()
     {
-        for(int i = 0; i < 100; i++)
+        for(int i = 0; i < 10; i++)
         {
         rawDia += analogRead(pinDia);
         }
-        rawDia = rawDia / 100;
+        rawDia = rawDia / 10;
         Diametre_po = convert_raw_po(rawDia);
         Diametre_m = convert_po_meter(Diametre_po);
         Rayon_po = Diametre_po / 2;
         Rayon_m = Diametre_m /2;
-        DiamDisplay = Diametre_po * 100;
+        DiamDisplay = Diametre_po * 10;
     }
 
     void uptade_display_diametreShaft(TM1637 DiamShaftDisplay)

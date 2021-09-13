@@ -15,17 +15,20 @@
  * @param pinAnalogOffset   : Pin Analog qui permet de contreler le offset
  */
  void CalibrationAxe::init(uint8_t pinAnalog, uint16_t zero, float span, 
-                            uint8_t pinDigital, String nomAxe, uint8_t pinDigitalDisplayClk, 
-                            uint8_t pinDigitalDisplayData, uint8_t pinAnalogOffset,float constanteDeRapel)
+                            uint8_t pinDigital, String nomAxe, uint8_t pinDigitalDisplayPositionClk, 
+                            uint8_t pinDigitalDisplayPositionData,uint8_t pinDigitalDisplayPoidsClk,uint8_t pinDigitalDisplayPoidsData, uint8_t pinAnalogOffset,float constanteDeRapel)
     {
         Acc.init(pinAnalog, zero, span);
         NomAxe = nomAxe;
         pinActiveAxe = pinDigital;
         pinMode(pinActiveAxe, INPUT_PULLUP);
         resetData();
-        display.init(pinDigitalDisplayClk, pinDigitalDisplayData);
-        display.set(LUMINOSITE);
-        display.point(POINT_ON);
+        displayPosition.init(pinDigitalDisplayPositionClk, pinDigitalDisplayPositionData);
+        displayPosition.set(LUMINOSITE);
+        displayPosition.point(POINT_ON);
+        displayPoids.init(pinDigitalDisplayPoidsClk,pinDigitalDisplayPoidsData);
+        displayPoids.set(LUMINOSITE);
+        displayPoids.point(POINT_ON);
         pinOffset = pinAnalogOffset;
         blinkEtat = 0;
         erreur = 0;
@@ -204,7 +207,8 @@
     {
         if(blinkEtat == 0)
         {
-            display.clearDisplay();
+            displayPosition.clearDisplay();
+            displayPoids.clearDisplay();
             blinkEtat = 1;
         }
         else
@@ -472,12 +476,12 @@
         
         //Angle
         split_2_digit_number(afficherDiplayPosition, buff);
-        display.display(0, buff[0]); // (Where,Value)
-        display.display(1, buff[1]);
+        displayPosition.display(0, buff[0]); // (Where,Value)
+        displayPosition.display(1, buff[1]);
         //poids
         split_2_digit_number(afficherDisplayPoid, buff);
-        display.display(2, buff[0]);
-        display.display(3, buff[1]);
+        displayPoids.display(2, buff[0]);
+        displayPoids.display(3, buff[1]);
     }
 
     /**
