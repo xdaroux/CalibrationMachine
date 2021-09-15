@@ -230,15 +230,15 @@
 
         split_2_digit_number(abs(Offset), buff);
 
-        display.display(2, buff[0]);
-        display.display(3, buff[1]);
+        displayPosition.display(2, buff[0]);
+        displayPosition.display(3, buff[1]);
         if (Offset < 0)
         {
-            display.displaySeg(1, 0b01000000);
+            displayPosition.displaySeg(1, 0b01000000);
         }
         else
         {
-            display.displaySeg(1, 0b00000000);
+            displayPosition.displaySeg(1, 0b00000000);
         }
 
         if (offset != Offset)
@@ -472,10 +472,12 @@
      */
     void CalibrationAxe::displayValue()
     {
-        uint8_t buff[2];
+        uint8_t buff[4];
         
+        //split_4_digit_number() ... 
+
         //Angle
-        split_2_digit_number(afficherDiplayPosition, buff);
+        split_4_digit_number(afficherDiplayPosition * 3.6, buff); // 3.6 permet de ramener entre 0 -- 360 deg cela fait qu'on est dans une précision de 4 degré par contre 
         displayPosition.display(0, buff[0]); // (Where,Value)
         displayPosition.display(1, buff[1]);
         //poids
