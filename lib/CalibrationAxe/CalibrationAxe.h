@@ -55,6 +55,8 @@ public:
 
 
     TM1637 display;
+    TM1637 displayPosition;
+    TM1637 displayPoids;
     uint16_t afficherDiplayPosition;
     uint16_t afficherDisplayPoid;
     bool blinkEtat;
@@ -70,10 +72,10 @@ public:
 
     
 
-
-void init(uint8_t pinAnalog, uint16_t zero, float span, uint8_t pinDigital,
-                            String nomAxe, uint8_t pinDigitalDisplayClk, uint8_t pinDigitalDisplayData,
-                            uint8_t pinAnalogOffset,float constanteDeRapel);
+void CalibrationAxe::init(uint8_t pinAnalog, uint16_t zero, float span, 
+                            uint8_t pinDigital, String nomAxe, uint8_t pinDigitalDisplayPositionClk, 
+                            uint8_t pinDigitalDisplayPositionData,uint8_t pinDigitalDisplayPoidsClk,uint8_t pinDigitalDisplayPoidsData, uint8_t pinAnalogOffset,float constanteDeRapel);
+ 
 
 void calibrationZeroAcc();
 void afficherCalibZero();

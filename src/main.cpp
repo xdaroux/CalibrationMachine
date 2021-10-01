@@ -44,7 +44,7 @@ TM1637 DiameterDisplay;
 
 CalibrationAxe CalibAxe_1;
 #define NOM_AXE_1 "Drive"
-#define pinACC_1 A1
+#define pinACC_1 A0
 #define pinACTIVE_AXE_1 49
 #define ACC_1_ZERO 507//484 // 515 sans lecture 
 #define ACC_1_SPAN 102
@@ -60,7 +60,7 @@ CalibrationAxe CalibAxe_1;
 
 CalibrationAxe CalibAxe_2;
 #define NOM_AXE_2 "AXE 1"
-#define pinACC_2 A3
+#define pinACC_2 A1
 #define pinACTIVE_AXE_2 48
 #define ACC_2_ZERO 501//470  //500 sans lecture 
 #define ACC_2_SPAN 102
@@ -75,7 +75,7 @@ CalibrationAxe CalibAxe_2;
 
 CalibrationAxe CalibAxe_3;
 #define NOM_AXE_3 "AXE 2"
-#define pinACC_3 A5
+#define pinACC_3 A2
 #define pinACTIVE_AXE_3 47
 #define ACC_3_ZERO 500//475 // 505 sans lecture 
 #define ACC_3_SPAN 102
@@ -141,7 +141,7 @@ void setup()
   CalibAxe_1.init(pinACC_1, ACC_1_ZERO, ACC_1_SPAN, pinACTIVE_AXE_1, NOM_AXE_1, pinDISPLAY_POS_1_CLK, pinDISPLAY_POS_1_DIO,pinDISPLAY_KG_1_CLK,pinDISPLAY_KG_1_DIO, pinOFFSET,CONSTANTE_DE_RAPEL_K_1);
   CalibAxe_2.init(pinACC_2, ACC_2_ZERO, ACC_2_SPAN, pinACTIVE_AXE_2, NOM_AXE_2, pinDISPLAY_POS_2_CLK, pinDISPLAY_POS_2_DIO,pinDISPLAY_KG_2_CLK,pinDISPLAY_KG_2_DIO, pinOFFSET,CONSTANTE_DE_RAPEL_K_2);
   CalibAxe_3.init(pinACC_3, ACC_3_ZERO, ACC_3_SPAN, pinACTIVE_AXE_3, NOM_AXE_3, pinDISPLAY_POS_3_CLK, pinDISPLAY_POS_3_DIO,pinDISPLAY_KG_3_CLK,pinDISPLAY_KG_3_DIO, pinOFFSET,CONSTANTE_DE_RAPEL_K_3);
-  CalibAxe_4.init(pinACC_4, ACC_4_ZERO, ACC_4_SPAN, pinACTIVE_AXE_4, NOM_AXE_4, 555, 555,555,555, pinOFFSET, CONSTANTE_DE_RAPEL_K_4); // Disable For now 
+  CalibAxe_4.init(pinACC_4, ACC_4_ZERO, ACC_4_SPAN, pinACTIVE_AXE_4, NOM_AXE_4, 555, 555,555,555, pinOFFSET, 5); // Disable For now 
   /*---------------END Calibration Axe---------------*/
 
 
