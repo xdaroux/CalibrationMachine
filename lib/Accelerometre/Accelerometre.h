@@ -35,8 +35,9 @@ public:
         Serial.println("Mettre Axe accelerometre a 90 degree a la gravete pour Trouver le Zero");
         attUser("Mettre pin 13 au GND quand c'est Fait ", 20000);
         Zero = read();
-        delay(500);
+        
         Serial.println("Mettre Axe accelerometre a 0 degree a la gravete fleche vers le haut pour Trouver le Span de 9.81");
+        delay(10000);
         attUser("Mettre pin 13 au GND quand c'est Fait ", 20000);
         Span = read() - Zero;
         afficherCalibration();
@@ -62,6 +63,12 @@ public:
 
     void convertGForceToMparS2()
     {
+
+    }
+
+    float convertKgToOz(float kgValue)
+    {
+        return kgValue * 35.274;
     }
 
     void attUser(String info, uint32_t timeOut)

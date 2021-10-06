@@ -12,8 +12,8 @@
 #include <Arduino.h>
 #include "displayData.h"
 
-#define DIAMETRE_MIN_PO 1.0
-#define DIAMETRE_MAX_PO 6.0
+#define DIAMETRE_MIN_PO 0.5
+#define DIAMETRE_MAX_PO 9.0
 #define RAW_MIN 0.0
 #define RAW_MAX 1023.0
 

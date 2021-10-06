@@ -43,20 +43,21 @@ public:
     float AccMax_raw;
     uint16_t AngleAccMax_0_100;
     int16_t AngleAccMaxOffset_0_100;
+    int16_t AngleAccMaxOffset_0_360;
     float AngleAccMax_deg;
 
     float AccMin_raw;
     uint16_t AngleAccMin_0_100;
     int16_t AngleAccMinOffset_0_100;
+    int16_t AngleAccMinOffset_0_360;
     float AngleAccMin_deg;
 
     int16_t AngleAccMinInverser;
     int16_t AngleAccMaxInverser; 
 
 
-    TM1637 display;
-    TM1637 displayPosition;
     TM1637 displayPoids;
+    TM1637 displayPosition;
     uint16_t afficherDiplayPosition;
     uint16_t afficherDisplayPoid;
     bool blinkEtat;
@@ -69,6 +70,7 @@ public:
     float ConstanteDeRapel_K; //Newton * Metre
     float poidCalculer;
     float MasseUnbalance_g;
+    float MasseUnbalance_oz;
 
     
 
@@ -76,6 +78,10 @@ void CalibrationAxe::init(uint8_t pinAnalog, uint16_t zero, float span,
                             uint8_t pinDigital, String nomAxe, uint8_t pinDigitalDisplayPositionClk, 
                             uint8_t pinDigitalDisplayPositionData,uint8_t pinDigitalDisplayPoidsClk,uint8_t pinDigitalDisplayPoidsData, uint8_t pinAnalogOffset,float constanteDeRapel);
  
+
+void init(uint8_t pinAnalog, uint16_t zero, float span, uint8_t pinDigital,
+                            String nomAxe, uint8_t pinDigitalDisplayClk, uint8_t pinDigitalDisplayData,
+                            uint8_t pinAnalogOffset,float constanteDeRapel);
 
 void calibrationZeroAcc();
 void afficherCalibZero();
@@ -102,7 +108,8 @@ bool checkAxeActive();
 void algoPeak();
 void appliquerOffeset();
 void convertirPoidCalcul(uint16_t rpm);
-void prepareDataAfficher();
+void prepareDataAfficher(); 
+void changeScaleData_0_360(); 
 void displayValue();
 void convertirPoidEnGrammeCalcul(uint16_t rpm, float diametre);
 

@@ -25,10 +25,10 @@
         resetData();
         displayPosition.init(pinDigitalDisplayPositionClk, pinDigitalDisplayPositionData);
         displayPosition.set(LUMINOSITE);
-        displayPosition.point(POINT_ON);
+        //displayPosition.point(POINT_ON);
         displayPoids.init(pinDigitalDisplayPoidsClk,pinDigitalDisplayPoidsData);
         displayPoids.set(LUMINOSITE);
-        displayPoids.point(POINT_ON);
+        //displayPoids.point(POINT_ON);
         pinOffset = pinAnalogOffset;
         blinkEtat = 0;
         erreur = 0;
@@ -111,6 +111,16 @@
             
         }
     }
+
+    /**
+     * @brief 
+     * 
+     */
+    void CalibrationAxe::changeScaleData_0_360()
+    {
+        AngleAccMaxOffset_0_360 = AngleAccMaxOffset_0_100 * 3.6;
+        AngleAccMinOffset_0_360 = AngleAccMinOffset_0_100 * 3.6;
+    } 
 
     /**
      * @brief Permet afficher la moyenne de toute les prises d'une rotation du shaft
@@ -225,25 +235,26 @@
     void CalibrationAxe::editOffset()
     {
         int16_t offset;
-        uint8_t buff[2];
+        uint8_t buff[4];
         offset = map(analogRead(pinOffset), 0, 1023, -50, 50);
+        Serial.println(offset);
+        split_4_digit_number(abs(Offset), buff);
 
-        split_2_digit_number(abs(Offset), buff);
-
-        displayPosition.display(2, buff[0]);
-        displayPosition.display(3, buff[1]);
+        displayPosition.display(1, buff[1]);
+        displayPosition.display(2, buff[2]);
+        displayPosition.display(3, buff[3]);
         if (Offset < 0)
         {
-            displayPosition.displaySeg(1, 0b01000000);
+            displayPosition.displaySeg(0, 0b01000000);
         }
         else
         {
-            displayPosition.displaySeg(1, 0b00000000);
+            displayPosition.displaySeg(0, 0b00000000);
         }
 
         if (offset != Offset)
         {
-            Offset = offset;
+            Offset = offset; 
         }
     }
 
@@ -439,6 +450,7 @@
     {
         //Preparation de l'angle a afficher
         appliquerOffeset();
+        //AppliquerOffesetCoded(); // fonction a implemeter 
         if (AngleAccMax_0_100 < 10 || AngleAccMax_0_100 > 90)
         {
             //Prendre le Min
@@ -451,20 +463,23 @@
         }
 
         //Preparation du poids a afficher
-        if(MasseUnbalance_g < 0)
+        if(MasseUnbalance_oz < 0)
         {
             afficherDisplayPoid = 0;
         }
         else
         {
-        afficherDisplayPoid = MasseUnbalance_g;
+        afficherDisplayPoid = MasseUnbalance_oz;
+        
         }
 
-        if(afficherDisplayPoid > 99)
+        if(afficherDisplayPoid > 999)
         {
-            afficherDisplayPoid = 99;
+            afficherDisplayPoid = 999;
         }
+
     }
+
 
     /**
      * @brief Permet d'afficher les valeurs sur l'afficheur 7 segment dedier a cette axe
@@ -478,12 +493,15 @@
 
         //Angle
         split_4_digit_number(afficherDiplayPosition * 3.6, buff); // 3.6 permet de ramener entre 0 -- 360 deg cela fait qu'on est dans une précision de 4 degré par contre 
-        displayPosition.display(0, buff[0]); // (Where,Value)
+        //displayPosition.display(0, buff[0]); // (Where,Value)
         displayPosition.display(1, buff[1]);
+        displayPosition.display(2, buff[2]);
+        displayPosition.display(3, buff[3]);
         //poids
-        split_2_digit_number(afficherDisplayPoid, buff);
-        displayPoids.display(2, buff[0]);
-        displayPoids.display(3, buff[1]);
+        split_4_digit_number(afficherDisplayPoid, buff);
+        displayPoids.display(1, buff[1]);
+        displayPoids.display(2, buff[2]);
+        displayPoids.display(3, buff[3]);
     }
 
     /**
@@ -512,5 +530,6 @@
         float K = ConstanteDeRapel_K; // Entre 2000 et  3000 // Chaque axe a un balancement unique thechniquement
         float R = diametre / 2;
         float Mu = (-K * DeltaX) / (1.1 * R *pow((N/10),2)); // kg for now 
-        MasseUnbalance_g = Mu * 1000;
+        MasseUnbalance_g = Mu * 1000; //EN gramme 
+        MasseUnbalance_oz = Mu * 35.274; // en oz  
     }

@@ -5,7 +5,7 @@
 #include "displayData.h"
 #include "DiametreShaft.h"
 
-#define _DEBUG_N1_ 0
+#define _DEBUG_N1_ 1
 
 //Definition des Type//
 enum ETAT
@@ -46,8 +46,9 @@ CalibrationAxe CalibAxe_1;
 #define NOM_AXE_1 "Drive"
 #define pinACC_1 A0
 #define pinACTIVE_AXE_1 49
-#define ACC_1_ZERO 507//484 // 515 sans lecture 
-#define ACC_1_SPAN 102
+#define ACC_1_ZERO 484 // Axe X 484 quand a  0 
+#define ACC_1_SPAN 197 // Axe X 197 
+#define OFFSET_AXE_1 0
 #define CONSTANTE_DE_RAPEL_K_1 -2850
 #define pinDISPLAY_1_DIO 28
 #define pinDISPLAY_1_CLK 29
@@ -61,9 +62,10 @@ CalibrationAxe CalibAxe_1;
 CalibrationAxe CalibAxe_2;
 #define NOM_AXE_2 "AXE 1"
 #define pinACC_2 A1
-#define pinACTIVE_AXE_2 48
+#define pinACTIVE_AXE_2 51
 #define ACC_2_ZERO 501//470  //500 sans lecture 
-#define ACC_2_SPAN 102
+#define ACC_2_SPAN 197 // 197 A
+#define OFFSET_AXE_2 0
 #define CONSTANTE_DE_RAPEL_K_2 -1425
 #define pinDISPLAY_2_DIO 26
 #define pinDISPLAY_2_CLK 27
@@ -76,9 +78,10 @@ CalibrationAxe CalibAxe_2;
 CalibrationAxe CalibAxe_3;
 #define NOM_AXE_3 "AXE 2"
 #define pinACC_3 A2
-#define pinACTIVE_AXE_3 47
+#define pinACTIVE_AXE_3 53
 #define ACC_3_ZERO 500//475 // 505 sans lecture 
-#define ACC_3_SPAN 102
+#define ACC_3_SPAN 197
+#define OFFSET_AXE_3 0
 #define CONSTANTE_DE_RAPEL_K_3 -1425
 #define pinDISPLAY_3_DIO 24
 #define pinDISPLAY_3_CLK 25
@@ -93,7 +96,7 @@ CalibrationAxe CalibAxe_4;
 #define pinACC_4 A3
 #define pinACTIVE_AXE_4 53
 #define ACC_4_ZERO 508//481  // 512 sans lecture
-#define ACC_4_SPAN 102
+#define ACC_4_SPAN 197
 #define CONSTANTE_DE_RAPEL_K_4 -2850
 #define pinDISPLAY_4_DIO 22
 #define pinDISPLAY_4_CLK 23
@@ -122,7 +125,7 @@ void setup()
 {
   // put your setup code here, to run once:
   Serial.begin(115200);
-  analogReference(EXTERNAL); // use AREF for reference voltage of the accelerometer 
+  //analogReference(EXTERNAL); // use AREF for reference voltage of the accelerometer 
 
   /*---------------RPM---------------*/
   rpm_init(&Rpm);
@@ -146,7 +149,7 @@ void setup()
 
 
   //calibAllAxeZero(); // permet de faire la calibration des axe et d'afficher les informations dans la console (PORT SERIE)
-
+  //CalibAxe_1.Acc.calibration();
   attachInterrupt(digitalPinToInterrupt(pinInterrupt), blink, FALLING);
   pinMode(pinSwitch, INPUT_PULLUP);
 
@@ -191,9 +194,10 @@ void loop()
 
   case ATTENTE:
 
-    
     if (Rpm.rpm < MIN_ACTIF_RPM)
     {
+
+      
       if (oldTimerButton(TIME_OLD_BUTTON_EDIT))
       {
         Etat = EDIT;
