@@ -14,6 +14,8 @@
 #include "displayData.h"
 
 #define _DEBUG_N1_ 1
+#define _OFFESET_CODED__ 1 
+#define _INVERTION_DONNE_ 0
 
 #define NB_LECTURE 100
 #define NB_TEST 20
@@ -63,6 +65,7 @@ public:
     bool blinkEtat;
 
     int16_t Offset;
+    int16_t OffsetCoded;
     uint8_t pinOffset;
 
     bool erreur;
@@ -76,7 +79,7 @@ public:
 
 void CalibrationAxe::init(uint8_t pinAnalog, uint16_t zero, float span, 
                             uint8_t pinDigital, String nomAxe, uint8_t pinDigitalDisplayPositionClk, 
-                            uint8_t pinDigitalDisplayPositionData,uint8_t pinDigitalDisplayPoidsClk,uint8_t pinDigitalDisplayPoidsData, uint8_t pinAnalogOffset,float constanteDeRapel);
+                            uint8_t pinDigitalDisplayPositionData,uint8_t pinDigitalDisplayPoidsClk,uint8_t pinDigitalDisplayPoidsData, uint8_t pinAnalogOffset,float constanteDeRapel, int16_t offsetCoded);
  
 
 void init(uint8_t pinAnalog, uint16_t zero, float span, uint8_t pinDigital,
@@ -107,6 +110,7 @@ bool checkAxeActive();
 
 void algoPeak();
 void appliquerOffeset();
+void appliquerOffesetCoded();
 void convertirPoidCalcul(uint16_t rpm);
 void prepareDataAfficher(); 
 void changeScaleData_0_360(); 

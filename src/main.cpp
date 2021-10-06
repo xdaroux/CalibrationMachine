@@ -6,6 +6,7 @@
 #include "DiametreShaft.h"
 
 #define _DEBUG_N1_ 1
+#define _OFFESET_CODED__ 1 
 
 //Definition des Type//
 enum ETAT
@@ -48,7 +49,7 @@ CalibrationAxe CalibAxe_1;
 #define pinACTIVE_AXE_1 49
 #define ACC_1_ZERO 484 // Axe X 484 quand a  0 
 #define ACC_1_SPAN 197 // Axe X 197 
-#define OFFSET_AXE_1 0
+#define OFFSET_AXE_1 10 // de -100 a 100 * 3.6 pour application 360 
 #define CONSTANTE_DE_RAPEL_K_1 -2850
 #define pinDISPLAY_1_DIO 28
 #define pinDISPLAY_1_CLK 29
@@ -141,10 +142,10 @@ void setup()
   /*-------------END DiamShaft-------------*/
 
   /*-----------------Calibration Axe-----------------*/
-  CalibAxe_1.init(pinACC_1, ACC_1_ZERO, ACC_1_SPAN, pinACTIVE_AXE_1, NOM_AXE_1, pinDISPLAY_POS_1_CLK, pinDISPLAY_POS_1_DIO,pinDISPLAY_KG_1_CLK,pinDISPLAY_KG_1_DIO, pinOFFSET,CONSTANTE_DE_RAPEL_K_1);
-  CalibAxe_2.init(pinACC_2, ACC_2_ZERO, ACC_2_SPAN, pinACTIVE_AXE_2, NOM_AXE_2, pinDISPLAY_POS_2_CLK, pinDISPLAY_POS_2_DIO,pinDISPLAY_KG_2_CLK,pinDISPLAY_KG_2_DIO, pinOFFSET,CONSTANTE_DE_RAPEL_K_2);
-  CalibAxe_3.init(pinACC_3, ACC_3_ZERO, ACC_3_SPAN, pinACTIVE_AXE_3, NOM_AXE_3, pinDISPLAY_POS_3_CLK, pinDISPLAY_POS_3_DIO,pinDISPLAY_KG_3_CLK,pinDISPLAY_KG_3_DIO, pinOFFSET,CONSTANTE_DE_RAPEL_K_3);
-  CalibAxe_4.init(pinACC_4, ACC_4_ZERO, ACC_4_SPAN, pinACTIVE_AXE_4, NOM_AXE_4, 555, 555,555,555, pinOFFSET, 5); // Disable For now 
+  CalibAxe_1.init(pinACC_1, ACC_1_ZERO, ACC_1_SPAN, pinACTIVE_AXE_1, NOM_AXE_1, pinDISPLAY_POS_1_CLK, pinDISPLAY_POS_1_DIO,pinDISPLAY_KG_1_CLK,pinDISPLAY_KG_1_DIO, pinOFFSET,CONSTANTE_DE_RAPEL_K_1,OFFSET_AXE_1);
+  CalibAxe_2.init(pinACC_2, ACC_2_ZERO, ACC_2_SPAN, pinACTIVE_AXE_2, NOM_AXE_2, pinDISPLAY_POS_2_CLK, pinDISPLAY_POS_2_DIO,pinDISPLAY_KG_2_CLK,pinDISPLAY_KG_2_DIO, pinOFFSET,CONSTANTE_DE_RAPEL_K_2,OFFSET_AXE_2);
+  CalibAxe_3.init(pinACC_3, ACC_3_ZERO, ACC_3_SPAN, pinACTIVE_AXE_3, NOM_AXE_3, pinDISPLAY_POS_3_CLK, pinDISPLAY_POS_3_DIO,pinDISPLAY_KG_3_CLK,pinDISPLAY_KG_3_DIO, pinOFFSET,CONSTANTE_DE_RAPEL_K_3,OFFSET_AXE_3);
+  CalibAxe_4.init(pinACC_4, ACC_4_ZERO, ACC_4_SPAN, pinACTIVE_AXE_4, NOM_AXE_4, 555, 555,555,555, pinOFFSET, 5,0); // Disable For now 
   /*---------------END Calibration Axe---------------*/
 
 

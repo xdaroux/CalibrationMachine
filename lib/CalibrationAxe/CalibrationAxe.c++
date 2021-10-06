@@ -16,7 +16,7 @@
  */
  void CalibrationAxe::init(uint8_t pinAnalog, uint16_t zero, float span, 
                             uint8_t pinDigital, String nomAxe, uint8_t pinDigitalDisplayPositionClk, 
-                            uint8_t pinDigitalDisplayPositionData,uint8_t pinDigitalDisplayPoidsClk,uint8_t pinDigitalDisplayPoidsData, uint8_t pinAnalogOffset,float constanteDeRapel)
+                            uint8_t pinDigitalDisplayPositionData,uint8_t pinDigitalDisplayPoidsClk,uint8_t pinDigitalDisplayPoidsData, uint8_t pinAnalogOffset,float constanteDeRapel, int16_t offsetCoded)
     {
         Acc.init(pinAnalog, zero, span);
         NomAxe = nomAxe;
@@ -35,6 +35,7 @@
         AngleAccMinOffset_0_100 = 0;
         AngleAccMaxOffset_0_100 = 0;
         ConstanteDeRapel_K = constanteDeRapel;
+        OffsetCoded = offsetCoded;
     }
 
 
@@ -399,6 +400,49 @@
     }
 
     /**
+     * @brief Permet d'appliquer le offset sur la position de l'axe
+     * 
+     */
+    void CalibrationAxe::appliquerOffesetCoded()
+    {
+        int offsetMin = 0;
+        if (OffsetCoded < 0)
+        {
+            offsetMin = OffsetCoded + 50;
+        }
+        else
+        {
+            offsetMin = OffsetCoded - 50;
+        }
+
+        #if _INVERTION_DONNE_
+        AngleAccMinOffset_0_100 = AngleAccMinInverser + offsetMin; // Offset min different
+        AngleAccMaxOffset_0_100 = AngleAccMaxInverser + OffsetCoded;
+        #else
+        AngleAccMinOffset_0_100 =  AngleAccMin_0_100 + offsetMin; // Offset min different
+        AngleAccMaxOffset_0_100 = AngleAccMax_0_100 + OffsetCoded;
+        #endif
+
+        if (AngleAccMinOffset_0_100 >= 100)
+        {
+            AngleAccMinOffset_0_100 -= 100;
+        }
+        else if (AngleAccMinOffset_0_100 < 0)
+        {
+            AngleAccMinOffset_0_100 += 100;
+        }
+
+        if (AngleAccMaxOffset_0_100 >= 100)
+        {
+            AngleAccMaxOffset_0_100 -= 100;
+        }
+        else if (AngleAccMaxOffset_0_100 < 0)
+        {
+            AngleAccMaxOffset_0_100 += 100;
+        }
+    }
+
+    /**
      * @brief Algoritme qui permet de determiner les valeurs peak negatif(min) et positif(max) 
      *        
      * NOTE : Pour le moment un inversion est effectuer ici il va falloir modifier sa pour avoir 
@@ -449,8 +493,13 @@
     void CalibrationAxe::prepareDataAfficher()
     {
         //Preparation de l'angle a afficher
+        #if _OFFESET_CODED__ 
+        appliquerOffesetCoded(); //Code manuellement dans le code
+        #else  
         appliquerOffeset();
-        //AppliquerOffesetCoded(); // fonction a implemeter 
+        #endif
+        
+        
         if (AngleAccMax_0_100 < 10 || AngleAccMax_0_100 > 90)
         {
             //Prendre le Min
