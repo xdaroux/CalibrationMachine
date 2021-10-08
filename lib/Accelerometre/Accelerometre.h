@@ -37,7 +37,6 @@ public:
         Zero = read();
         
         Serial.println("Mettre Axe accelerometre a 0 degree a la gravete fleche vers le haut pour Trouver le Span de 9.81");
-        delay(10000);
         attUser("Mettre pin 13 au GND quand c'est Fait ", 20000);
         Span = read() - Zero;
         afficherCalibration();
@@ -78,13 +77,12 @@ public:
         while (digitalRead(13))
         {
             //Tourne en boucle tant que la pin 13 est pas mis au ground
-            if (millis() - timerOlder > 5000)
+            if ((millis() - timerOlder) > 5000)
             {
                 timerOlder = millis();
                 Serial.println(info);
             }
-
-            if (millis() - timerOutOlder > timeOut)
+            if ((millis() - timerOutOlder) > timeOut)
             {
                 break;
             }

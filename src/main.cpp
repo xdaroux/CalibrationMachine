@@ -49,7 +49,7 @@ CalibrationAxe CalibAxe_1;
 #define pinACTIVE_AXE_1 49
 #define ACC_1_ZERO 484 // Axe X 484 quand a  0 
 #define ACC_1_SPAN 197 // Axe X 197 
-#define OFFSET_AXE_1 10 // de -100 a 100 * 3.6 pour application 360 
+#define OFFSET_AXE_1 0 // de -100 a 100 * 3.6 pour application 360 
 #define CONSTANTE_DE_RAPEL_K_1 -2850
 #define pinDISPLAY_1_DIO 28
 #define pinDISPLAY_1_CLK 29
@@ -126,7 +126,7 @@ void setup()
 {
   // put your setup code here, to run once:
   Serial.begin(115200);
-  //analogReference(EXTERNAL); // use AREF for reference voltage of the accelerometer 
+  //analogReference(EXTERNAL); // use AREF for reference voltage of the accelerometer 3.3V celon l'accélérometre 
 
   /*---------------RPM---------------*/
   rpm_init(&Rpm);
