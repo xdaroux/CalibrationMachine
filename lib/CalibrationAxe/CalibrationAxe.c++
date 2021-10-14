@@ -584,7 +584,7 @@
         float R = diametre / 2;
         float Mu = (-K * DeltaX) / (1.1 * R *pow((N/10),2)); // kg for now 
 
-        float tata = (DeltaA * 2500) / ((1.1 * R *pow((N/10),2)));
+        float tata = (DeltaA * K) / ((1.1 * R *pow((N/10),2)));
         Serial.print("TATA TEST : ");Serial.println(tata);
         
         float DeltaX2 = pow(((60.0/(float)rpm)/2.0),2) * (DeltaA / 2); // rpm to s 
@@ -612,7 +612,7 @@
          float Mu2 = (-K * DeltaX2) / (1.1 * R *pow((N/10),2)); // kg for now*/ 
 
         MasseUnbalance_g = Mu * 1000; //EN gramme 
-        MasseUnbalance_oz = Mu * 35.274; // en oz  
+        MasseUnbalance_oz = tata; // en oz  
         MasseUnbalance_g2 = Mu2 * 1000; //EN gramme 
         MasseUnbalance_oz2 = Mu2 * 35.274; // en oz  
     }
