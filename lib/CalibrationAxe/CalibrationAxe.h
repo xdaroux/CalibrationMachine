@@ -74,6 +74,8 @@ public:
     float poidCalculer;
     float MasseUnbalance_g;
     float MasseUnbalance_oz;
+    float MasseUnbalance_g2;
+    float MasseUnbalance_oz2;
 
     
 

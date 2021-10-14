@@ -47,10 +47,10 @@ CalibrationAxe CalibAxe_1;
 #define NOM_AXE_1 "Drive"
 #define pinACC_1 A0
 #define pinACTIVE_AXE_1 49
-#define ACC_1_ZERO 484 // Axe X 484 quand a  0 
-#define ACC_1_SPAN 197 // Axe X 197 
-#define OFFSET_AXE_1 0 // de -100 a 100 * 3.6 pour application 360 
-#define CONSTANTE_DE_RAPEL_K_1 -2850
+#define ACC_1_ZERO 496 // Axe X 484 quand a  0 
+#define ACC_1_SPAN 204 // Axe X 197 
+#define OFFSET_AXE_1 30 // de -100 a 100 * 3.6 pour application 360 
+#define CONSTANTE_DE_RAPEL_K_1 -5000
 #define pinDISPLAY_1_DIO 28
 #define pinDISPLAY_1_CLK 29
 
@@ -64,10 +64,10 @@ CalibrationAxe CalibAxe_2;
 #define NOM_AXE_2 "AXE 1"
 #define pinACC_2 A1
 #define pinACTIVE_AXE_2 51
-#define ACC_2_ZERO 501//470  //500 sans lecture 
-#define ACC_2_SPAN 197 // 197 A
-#define OFFSET_AXE_2 0
-#define CONSTANTE_DE_RAPEL_K_2 -1425
+#define ACC_2_ZERO 500//470  //500 sans lecture 
+#define ACC_2_SPAN 204 // 197 A
+#define OFFSET_AXE_2 30
+#define CONSTANTE_DE_RAPEL_K_2 -5000
 #define pinDISPLAY_2_DIO 26
 #define pinDISPLAY_2_CLK 27
 
@@ -81,9 +81,9 @@ CalibrationAxe CalibAxe_3;
 #define pinACC_3 A2
 #define pinACTIVE_AXE_3 53
 #define ACC_3_ZERO 500//475 // 505 sans lecture 
-#define ACC_3_SPAN 197
-#define OFFSET_AXE_3 0
-#define CONSTANTE_DE_RAPEL_K_3 -1425
+#define ACC_3_SPAN 204
+#define OFFSET_AXE_3 30
+#define CONSTANTE_DE_RAPEL_K_3 -5000
 #define pinDISPLAY_3_DIO 24
 #define pinDISPLAY_3_CLK 25
 
@@ -149,7 +149,7 @@ void setup()
   /*---------------END Calibration Axe---------------*/
 
 
-  //calibAllAxeZero(); // permet de faire la calibration des axe et d'afficher les informations dans la console (PORT SERIE)
+//  calibAllAxeZero(); // permet de faire la calibration des axe et d'afficher les informations dans la console (PORT SERIE)
   //CalibAxe_1.Acc.calibration();
   attachInterrupt(digitalPinToInterrupt(pinInterrupt), blink, FALLING);
   pinMode(pinSwitch, INPUT_PULLUP);

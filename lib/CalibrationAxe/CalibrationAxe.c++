@@ -160,10 +160,13 @@
         Serial.print("Valeur avec offset Max :");Serial.println(AngleAccMaxOffset_0_100);
         Serial.print("POIDS CALCULER : "); Serial.println(poidCalculer);
         Serial.println("==================================");
-        Serial.print("Afficher G force Min : ");Serial.println(Acc.convertRawToGForce(AccMin_raw));
-        Serial.print("Afficher G force Max : ");Serial.println(Acc.convertRawToGForce(AccMax_raw));
-        Serial.print("Afficher G force Diff : ");Serial.println(Acc.convertRawToGForce(AccMax_raw) - Acc.convertRawToGForce(AccMin_raw) );
+        Serial.print("Afficher m/s2 force Min : ");Serial.println(Acc.convertRawToGForce(AccMin_raw));
+        Serial.print("Afficher m/s2 force Max : ");Serial.println(Acc.convertRawToGForce(AccMax_raw));
+        Serial.print("Afficher m/s2 force Diff : ");Serial.println(Acc.convertRawToGForce(AccMax_raw) - Acc.convertRawToGForce(AccMin_raw) );
         Serial.print("Masse unbalance(g) : ");Serial.println(MasseUnbalance_g);
+        Serial.print("Masse Unbalance (oz) : ");Serial.println(MasseUnbalance_oz);
+        Serial.print("Masse unbalance 2(g) : ");Serial.println(MasseUnbalance_g2);
+        Serial.print("Masse Unbalance 2(oz) : ");Serial.println(MasseUnbalance_oz2);
         Serial.println("==================================");
         Serial.println("-------------------------------------");
     }
@@ -518,7 +521,7 @@
         }
         else
         {
-        afficherDisplayPoid = MasseUnbalance_oz;
+        afficherDisplayPoid = MasseUnbalance_oz * 10; // * 10 pour afficher les decimal de la valeur 
         
         }
 
@@ -574,11 +577,42 @@
     void CalibrationAxe::convertirPoidEnGrammeCalcul(uint16_t rpm,float diametre)
     {
         float N = rpm;
+        float Rad = (rpm/60) *2 *PI;
         float DeltaA = float(Acc.convertRawToGForce(AccMax_raw)-Acc.convertRawToGForce(AccMin_raw));
-        float DeltaX = ((60 / N) / 4) * pow((DeltaA / 2),2);
+        float DeltaX = ((60 / N) / 2) * pow((DeltaA / 2),2);
         float K = ConstanteDeRapel_K; // Entre 2000 et  3000 // Chaque axe a un balancement unique thechniquement
         float R = diametre / 2;
         float Mu = (-K * DeltaX) / (1.1 * R *pow((N/10),2)); // kg for now 
+
+        float tata = (DeltaA * 2500) / ((1.1 * R *pow((N/10),2)));
+        Serial.print("TATA TEST : ");Serial.println(tata);
+        
+        float DeltaX2 = pow(((60.0/(float)rpm)/2.0),2) * (DeltaA / 2); // rpm to s 
+        float Mu2 = (400000 * DeltaX2) / (R *pow(Rad,2));
+        Serial.print("DeltaX : ");Serial.println(DeltaX);
+        Serial.print("R");Serial.println(R);
+        Serial.print("N");Serial.println(N);
+
+        /*float DeltaA2 = 0; 
+        float Accmax_m_s2 = Acc.convertRawToGForce(AccMax_raw);
+        float Accmin_m_s2 = Acc.convertRawToGForce(AccMin_raw);
+        if(abs(Accmax_m_s2) > abs(Accmin_m_s2))
+        {
+            DeltaA2 = Accmax_m_s2;
+        }
+        else
+        {
+            DeltaA2 = Accmin_m_s2;
+        }
+
+        float test = pow(DeltaA2,3)/6; 
+        Serial.print("TEST : -----------------------------------");Serial.println(test);
+         float DeltaX2 = ((60 / N) / 2) * pow((DeltaA2),2);
+        
+         float Mu2 = (-K * DeltaX2) / (1.1 * R *pow((N/10),2)); // kg for now*/ 
+
         MasseUnbalance_g = Mu * 1000; //EN gramme 
         MasseUnbalance_oz = Mu * 35.274; // en oz  
+        MasseUnbalance_g2 = Mu2 * 1000; //EN gramme 
+        MasseUnbalance_oz2 = Mu2 * 35.274; // en oz  
     }
