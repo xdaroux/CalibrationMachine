@@ -67,7 +67,7 @@ CalibrationAxe CalibAxe_2;
 #define ACC_2_ZERO 500//470  //500 sans lecture 
 #define ACC_2_SPAN 204 // 197 A
 #define OFFSET_AXE_2 27
-#define CONSTANTE_DE_RAPEL_K_2 2500
+#define CONSTANTE_DE_RAPEL_K_2 5000
 #define pinDISPLAY_2_DIO 26
 #define pinDISPLAY_2_CLK 27
 
