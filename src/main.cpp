@@ -4,6 +4,7 @@
 #include "RPM_NEW.h"
 #include "displayData.h"
 #include "DiametreShaft.h"
+#include "Nextion.h"
 
 #define _DEBUG_N1_ 1
 #define _OFFESET_CODED__ 1 
@@ -22,6 +23,10 @@ enum ETAT
 
 //Variable GLobal//
 ETAT Etat = INIT;
+
+NextionScreen nextionScreen(&Serial,4);
+
+
 
 DiametreShaft DiamShaft;
 #define pinDiamShaft A14
